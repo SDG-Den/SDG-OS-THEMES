@@ -1,74 +1,52 @@
 # SDG-OS-THEMES Migration Plan
 
-## 1. Implement Lifecycle Scripts
+## Directory Mapping
 
-All four root-level lifecycle scripts are **empty stubs** — must be implemented:
+| Source | Installed to |
+|--------|-------------|
+| `config/SDG-THEMES/<group>/` | `~/.config/SDG-THEMES/<group>/` |
+| `local/SDG-THEMES/setwallpapergroup.sh` | `~/.local/SDG-THEMES/setwallpapergroup.sh` |
+| `tips/` | `~/.local/tips/SDG-OS-THEMES/` |
+| `docs/` | `~/.local/docs/SDG-OS-THEMES/` |
 
-| Script | Purpose |
-|--------|---------|
-| `install.sh` | Deploy `config/SDG-THEMES/*` → `~/.config/sdgos/wallpapers/*`, deploy `local/SDG-THEMES/setwallpapergroup.sh` → `~/.config/sdgos/wallpapers/`, make executable |
-| `uninstall.sh` | Remove all wallpaper groups from `~/.config/sdgos/wallpapers/` |
-| `update.sh` | Re-deploy wallpapers |
-| `detect.sh` | Check for `dms` command, verify ~/.config/sdgos/wallpapers/ structure |
+## Path Rewrites
 
-## 2. Path Audit
+### setwallpapergroup.sh — internal paths
 
-### 2.1 Hardcoded `/home/$(whoami)/` in setwallpapergroup.sh
-`local/SDG-THEMES/setwallpapergroup.sh` line 47:
-```bash
-dms ipc call settings set customThemeFile "/home/$(whoami)/.config/DankMaterialShell/themes/$Preset/theme.json"
-```
-- Change to: `dms ipc call settings set customThemeFile "$HOME/.config/DankMaterialShell/themes/$Preset/theme.json"`.
+| Old | New |
+|-----|-----|
+| `WP_DIR=~/.config/sdgos/wallpapers` | `WP_DIR=~/.config/SDG-THEMES` |
+| `/home/$(whoami)/.config/DankMaterialShell/themes/` | `$HOME/.config/DankMaterialShell/themes/` |
 
-### 2.2 Wallpaper directory reference
-Lines 6-8 reference `~/.config/sdgos/wallpapers` — this is the install destination. Correct after deployment.
+### firstrun.sh (from SDG-MANGO-CORE) references this module
 
-## 3. Cross-module References
+| Old | New |
+|-----|-----|
+| `~/.config/sdgos/wallpapers/default/wallpaper.png` | `~/.config/SDG-THEMES/default/wallpaper.png` |
 
-### 3.1 setwallpapergroup.sh calls
-- `dms ipc call wallpaper set ...` — depends on DMS (DankMaterialShell from SDG-MANGO-CORE).
-- `dms ipc call settings set ...` — DMS settings API.
-- `dms kill`, `dms run` — DMS lifecycle commands.
-- `mmsg dispatch reload_config` — mangoWM IPC command.
+### binds.conf (from SDG-MANGO-CORE) references this module
 
-### 3.2 Binding from SDG-MANGO-CORE
-- `SUPER+W` → `~/.config/sdgos/wallpapers/setwallpapergroup.sh` (from binds.conf line 56).
+| Old | New |
+|-----|-----|
+| `~/.config/sdgos/wallpapers/setwallpapergroup.sh` | `~/.local/SDG-THEMES/setwallpapergroup.sh` |
 
-## 4. Config Structure
+## Lifecycle Scripts
 
-### 4.1 wallpaper.conf format
-Each wallpaper group has a `wallpaper.conf` file:
-```
-Theme_Category:<category>
-Theme_Name:<name>
-Generic_Color:<color>
-Matugen:<scheme>
-Mode:dark|light
-Preset:<preset>
-```
-This is read by `setwallpapergroup.sh` — do not change the format without updating the script.
+All four root-level scripts are empty. Implement:
 
-### 4.2 Theme categories found
-- `registry` (most groups)
-- Verify all 59 groups have valid `wallpaper.conf` files.
+- **install.sh**: Copy `config/SDG-THEMES/` → `~/.config/SDG-THEMES/`, copy `local/SDG-THEMES/` → `~/.local/SDG-THEMES/`, copy docs/tips.
+- **uninstall.sh**: Remove `~/.config/SDG-THEMES/`, `~/.local/SDG-THEMES/`.
+- **update.sh**: Re-deploy wallpapers (overwrite).
+- **detect.sh**: Check `dms` command, verify `~/.config/SDG-THEMES/` has at least one group.
 
-## 5. Modular Tips/Help Contribution
+## Modular Tips
 
-### 5.1 Tips
-- Add tips about wallpaper groups, the `SUPER+W` bind, `ALT+W` to cycle wallpapers.
-- Create `tips/` directory.
+- Create `tips/` with tips about wallpaper groups, `SUPER+W` bind, `ALT+W` cycling, `setwallpapergroup.sh` usage.
 
-### 5.2 Docs
-- `docs/SDG-THEMES/README.md` exists with module documentation.
-- Could contribute a help topic about using and customizing wallpaper groups.
+## Modular Docs
 
-## 6. Empty Directory Cleanup
+- `docs/SDG-THEMES/README.md` already exists — copy to `~/.local/docs/SDG-THEMES/`.
 
-| Directory | Status |
-|-----------|--------|
-| `cache/` | Empty — remove |
-| `tips/` | Empty — add tips or remove |
-| `other/` | Empty — remove |
+## Cleanup
 
-## 7. Large Files
-- The module contains ~300 wallpaper images across 59 groups. Consider `.gitattributes` for LFS or external download.
+- Empty `cache/`, `other/`, `tips/` — populate or remove.
