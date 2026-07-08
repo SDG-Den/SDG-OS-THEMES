@@ -3,7 +3,7 @@
 SELECTED="$1"
 
 
-WP_DIR=~/.config/sdgos/wallpapers
+WP_DIR=~/.config/SDG-THEMES
 
 WP_GROUPS=$(ls "$WP_DIR" -l --group-directories-first | grep -e '^d.*' | awk '{print $9}' )
 
