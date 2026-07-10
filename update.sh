@@ -1,12 +1,12 @@
 #!/bin/bash
 
-WORKDIR=/home/$(whoami)/.cache/SDG-PKG/sdg-themes
+WORKDIR="$HOME/.cache/SDG-PKG/sdg-themes"
 
-mkdir -p /home/$(whoami)/.config/SDG-THEMES
-cp -r $WORKDIR/config/SDG-THEMES/* /home/$(whoami)/.config/SDG-THEMES
-mkdir -p /home/$(whoami)/.local/SDG-THEMES
-cp -r $WORKDIR/local/SDG-THEMES/* /home/$(whoami)/.local/SDG-THEMES
-chmod a+x /home/$(whoami)/.local/SDG-THEMES/setwallpapergroup.sh
+rm -rf "$HOME/.local/SDG-THEMES"
+cp -r "$WORKDIR/local/"* "$HOME/.local/"
 
-cp -r $WORKDIR/docs/* /home/$(whoami)/.local/docs
-cp -r $WORKDIR/tips/* /home/$(whoami)/.local/tips
+rm -rf "$HOME/.local/docs/SDG-THEMES" "$HOME/.local/tips/SDG-OS-THEMES"
+cp -r "$WORKDIR/docs/"* "$HOME/.local/docs/"
+cp -r "$WORKDIR/tips/"* "$HOME/.local/tips/"
+
+chmod a+x "$HOME/.local/SDG-THEMES/setwallpapergroup.sh"
