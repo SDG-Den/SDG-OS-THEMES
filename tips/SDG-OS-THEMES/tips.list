@@ -1,0 +1,6 @@
+[SDG-OS-THEMES]: Press SUPER+W to open the wallpaper group FZF picker and switch between 57 theme groups
+[SDG-OS-THEMES]: Cycle wallpapers forward with ALT+W or backward with ALT+SHIFT+W within the current group
+[SDG-OS-THEMES]: Switch wallpaper groups directly from the terminal with wallpaper-select <group-name>
+[SDG-OS-THEMES]: Each wallpaper group applies its own color scheme — dynamic groups auto-extract colors from the image via Matugen
+[SDG-OS-THEMES]: Registry groups apply DMS theme presets like nord, catppuccin, or tokyo-night
+[SDG-OS-THEMES]: Create your own wallpaper group by adding a directory with images and a wallpaper.conf in ~/.config/SDG-THEMES/

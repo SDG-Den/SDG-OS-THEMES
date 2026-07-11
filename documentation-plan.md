@@ -1,48 +1,54 @@
 # SDG-OS-THEMES Documentation Plan
 
 ## Current Status
-One doc file exists (`docs/SDG-THEMES/README.md`, full documentation of wallpaper system). One tips file exists (`tips/SDG-OS-THEMES/README.md`, quick tips).
+One doc file exists (`docs/SDG-THEMES/README.md`, 46 lines). One tips file exists (`tips/SDG-OS-THEMES/README.md`, 14 lines with 4 tips). The existing docs are partially accurate but need expansion.
+
+## Source-Verified Inventory
+**Components:**
+- 57 wallpaper groups (NOT 56 as previously thought — plan was outdated)
+- 1 script: `setwallpapergroup.sh` — handles fzf group picker, wallpaper selection via DMS IPC, parses wallpaper.conf fields, applies theme category/Matugen variant/mode/preset
+- wallpaper.conf format: `Theme_Category` (dynamic/registry/custom/generic), `Theme_Name` (NOT used by script), `Generic_Color`, `Matugen` (vibrant/tonal-spot/neutral/fruit-salad), `Mode` (dark/light), `Preset`
+- Keybinds: SUPER+W (picker), ALT+W / ALT+SHIFT+W (cycle), wallpaper-select CLI
+- Theme categories: dynamic (Matugen extracts from wallpaper), registry (DMS preset applied), custom (hardware brand preset), generic (fixed color)
 
 ## Docs System (`docs/`)
 **Deploy location**: `~/.local/docs/SDG-THEMES/`
 
-### Existing Docs
-| File | Topic |
-|------|-------|
-| docs/SDG-THEMES/README.md | Wallpaper group structure, wallpaper.conf format, keybinds, cycling, wallpaper-select CLI |
-
 ### Planned Doc Topics
 | # | Topic | Description | Priority |
 |---|-------|-------------|----------|
-| 1 | Getting Started | How to use SUPER+W or wallpaper-select to change wallpaper | High |
-| 2 | Wallpaper Groups Reference | Full list of all 56 groups with theme category, mode, and matugen variant | High |
-| 3 | Group Categories Explained | dynamic vs registry vs custom vs generic behavior | Medium |
-| 4 | wallpaper.conf Reference | All fields: Theme_Category, Theme_Name, Generic_Color, Matugen, Mode, Preset | Medium |
-| 5 | Adding Custom Groups | How to create new wallpaper groups with your own images | Medium |
-| 6 | Color Scheme Integration | How themes propagate via Matugen to DMS, mangoWM, Firefox, WayShell | Low |
+| 1 | Getting Started | How to use SUPER+W and wallpaper-select to change wallpapers | High |
+| 2 | Wallpaper Groups Reference | Full list of all 57 groups with category, mode, and matugen variant | High |
+| 3 | Group Categories Explained | dynamic vs registry vs custom vs generic — what each does | Medium |
+| 4 | wallpaper.conf Reference | All fields: Generic_Color, Theme_Category, Matugen, Mode, Preset | Medium |
+| 5 | Adding Custom Groups | How to create a new wallpaper group with custom images and conf | Medium |
+| 6 | Color Scheme Integration | How themes propagate to DMS, mangoWM, Firefox, WayShell, Ghostty | Low |
 
-### Implementation
-- Convert existing README.md into focused topic docs
-- Add wallpaper group reference table
-- Follow SDG-DOCS naming convention
+### Existing Content
+| File | Notes |
+|------|-------|
+| `docs/SDG-THEMES/README.md` | 46 lines — covers basics. Needs expansion for topics #1, #3, #4 |
+| `analysis.md` | Has group category breakdown data — source for topic #3 |
 
 ## Tips System (`tips/`)
 **Deploy location**: `~/.local/tips/SDG-OS-THEMES/`
 
-### Existing Tips (from tips/SDG-OS-THEMES/README.md)
-1. Press SUPER+W to open wallpaper picker
-2. Use `wallpaper-select <group>` for direct switching
-3. Each wallpaper group sets its own color scheme
-4. Cycle to next image in group by pressing SUPER+W again
+### Existing Tips
+| # | Tip | Format | Notes |
+|---|-----|--------|-------|
+| 1 | SUPER+W — open wallpaper group selector | In `tips/README.md` — .md format, NOT sdgtip-compatible | Needs conversion to tips.list |
+| 2 | ALT+W / ALT+SHIFT+W — cycle wallpapers | Same .md file | Needs conversion |
+| 3 | wallpaper-select CLI | Same .md file | Needs conversion |
+| 4 | Per-group color schemes | Same .md file | Needs conversion |
 
-### Planned Tips
-| # | Tip | Description | Priority |
-|---|-----|-------------|----------|
-| 1 | Wallpaper picker | SUPER+W — browse and select wallpaper groups | High |
-| 2 | Quick switch | `wallpaper-select nord` — switch without interactive menu | High |
-| 3 | Dynamic colors | Dynamic wallpaper groups auto-generate colors from the image | Medium |
-| 4 | Custom themes | Hardware-brand groups apply matching DMS presets (ROG, Razer, etc.) | Medium |
+### Planned Additional Tips
+| # | Tip | Priority |
+|---|-----|----------|
+| 5 | dynamic themes auto-color from wallpaper | Medium |
+| 6 | custom themes match hardware brand | Low |
 
-### Implementation
-- Convert tips/README.md to tips.list format for SDG-TIPS aggregation
-- Add more actionable one-liner tips
+## Implementation Notes
+- Use `nn-topic-name.md` format for docs
+- Tips must be converted to `tips/SDG-OS-THEMES/tips.list` (one tip per line) for sdgtip compatibility
+- Keep the existing `tips/README.md` as reference but add the `.list` file for runtime
+- The 57 groups list data is in individual wallpaper.conf files under `config/SDG-THEMES/`
