@@ -1,7 +1,7 @@
 Package Name: sdg-themes
 Descriptive Name: SDG OS Wallpaper Themes
-Source: https://git.sdgcloud.nl/SDGDen/SDG-OS-THEMES
-Maintainer: SDGDen <sdgden@sdgcloud.nl>
+Source: https://github.com/SDG-Den/SDG-OS-THEMES
+Maintainer: SDGDen
 Version:0.2
 
 Dependencies: 
