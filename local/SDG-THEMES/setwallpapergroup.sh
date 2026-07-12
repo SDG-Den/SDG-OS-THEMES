@@ -3,10 +3,17 @@
 SELECTED="$1"
 
 
-WP_DIR=~/.config/SDG-THEMES
+WP_DIR=~/.local/themes
 
-WP_GROUPS=$(ls "$WP_DIR" -l --group-directories-first | grep -e '^d.*' | awk '{print $9}' )
+WP_CATEGORIES=$(ls "$WP_DIR" -l --group-directories-first | grep -e '^d.*' | awk '{print $9}' )
 
+WP_GROUPS=""
+
+FOR CAT in $WP_CATEGORIES; do 
+    THEMES=$(ls "$WP_DIR/$WP_CATEGORIES" -l --group-directories-first | grep -e '^d.*' | awk '{print $9}')
+    WP_GROUPS="$WP_GROUPS
+$THEMES"
+done
 
 if [[ $SELECTED == "" ]]; then
 
@@ -40,20 +47,14 @@ dms ipc call settings set matugenScheme scheme-$Matugen
 
 # dark/light mode
 dms ipc call theme $Mode
-sleep 1
-# generic > color 
+sleep 0.5
 dms ipc call settings set currentThemeName $GenericColor
 # browse > preset
 dms ipc call settings set customThemeFile "/home/$(whoami)/.config/DankMaterialShell/themes/$Preset/theme.json"
+
 sleep 1
-sleep 0.5
-dms kill
-mmsg dispatch spawn_shell,dms run
-sleep 4
-dms ipc call theme toggle
-dms ipc call theme toggle
 dms ipc call theme $Mode
-sleep 2
+sleep 1
 mmsg dispatch reload_config
 notify-send "theme $SELECTED applied" "you may have to manually reload ghostty (ctrl+r)"
 #read -n 1
