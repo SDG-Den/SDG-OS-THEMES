@@ -30,7 +30,7 @@ sleep 0.5
 dms ipc call wallpaper next
 dms ipc call wallpaper prev
 
-dms kill && mmsg dispatch spawn_shell,dms run
+
 
 ## todo: add other settings
 
