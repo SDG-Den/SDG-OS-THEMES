@@ -1,6 +1,6 @@
-SUPER+W — Open wallpaper group selector (FZF picker)
-ALT+W / ALT+SHIFT+W — Cycle wallpapers forward/backward in current group
-wallpaper-select <group-name> — Set a group directly without the picker
-Each group has a wallpaper.conf defining Matugen palette, mode, and DMS preset
-Dynamic groups auto-extract colors from the wallpaper via Matugen
-Custom groups apply hardware-branded DMS presets (ROG, Razer, Framework, etc.)
+[SDG-OS-THEMES]: SUPER+W — Open wallpaper group selector (FZF picker)
+[SDG-OS-THEMES]: ALT+W / ALT+SHIFT+W — Cycle wallpapers forward/backward in current group
+[SDG-OS-THEMES]: wallpaper-select <group-name> — Set a group directly without the picker
+[SDG-OS-THEMES]: Each group has a wallpaper.conf defining Matugen palette, mode, and DMS preset
+[SDG-OS-THEMES]: Dynamic groups auto-extract colors from the wallpaper via Matugen
+[SDG-OS-THEMES]: Custom groups apply hardware-branded DMS presets (ROG, Razer, Framework, etc.)
