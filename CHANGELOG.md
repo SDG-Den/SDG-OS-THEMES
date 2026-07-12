@@ -1,3 +1,10 @@
+#  sdg-themes update 0.3.1
+    
+## changelog 0.3 > 0.3.1
+
+minor patches to improve the speed of the wallpaper switcher significantly. 
+
+
 #  sdg-themes update 0.3
     
 ## changelog 0.2 > 0.3

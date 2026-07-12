@@ -26,7 +26,7 @@ fi
 echo "user selected $SELECTED"
 
 dms ipc call wallpaper set "$WP_DIR/$SELECTED/$(ls -1 "$WP_DIR/$SELECTED" | grep -v ".conf" | head -n 1)"
-sleep 0.5
+sleep 0.2
 dms ipc call wallpaper next
 dms ipc call wallpaper prev
 
@@ -51,16 +51,15 @@ dms ipc call settings set currentThemeCategory $ThemeCategory
 # auto > matugen template
 dms ipc call settings set matugenScheme scheme-$Matugen
 
-# dark/light mode
-dms ipc call theme $Mode
-sleep 0.5
 dms ipc call settings set currentThemeName $GenericColor
 # browse > preset
 dms ipc call settings set customThemeFile "/home/$(whoami)/.config/DankMaterialShell/themes/$Preset/theme.json"
 
-sleep 1
+sleep 0.2
+dms ipc call theme toggle
+dms ipc call theme toggle
 dms ipc call theme $Mode
-sleep 1
+sleep 0.2
 mmsg dispatch reload_config
 notify-send "theme $SELECTED applied" "you may have to manually reload ghostty (ctrl+r)"
 #read -n 1
