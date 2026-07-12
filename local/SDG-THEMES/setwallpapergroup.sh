@@ -5,14 +5,18 @@ SELECTED="$1"
 
 WP_DIR=~/.local/themes
 
-WP_CATEGORIES=$(ls "$WP_DIR" -l --group-directories-first | grep -e '^d.*' | awk '{print $9}' )
+WP_CATEGORIES=$(ls "$WP_DIR" -1 )
+
+echo "WP_CATEGORIES = $WP_CATEGORIES"
 
 WP_GROUPS=""
 
 for CAT in $WP_CATEGORIES; do 
-    THEMES=$(ls "$WP_DIR/$WP_CATEGORIES" -l --group-directories-first | grep -e '^d.*' | awk '{print $9}')
-    WP_GROUPS="$WP_GROUPS
-$THEMES"
+    THEMES=$(ls "$WP_DIR/$CAT" -1)
+    for THEME in $THEMES; do
+        WP_GROUPS="$WP_GROUPS
+$CAT/$THEME"
+    done
 done
 
 if [[ $SELECTED == "" ]]; then
