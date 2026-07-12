@@ -2,6 +2,8 @@
 
 SELECTED="$1"
 
+which matugen-compile && matugen-compile
+
 
 WP_DIR=~/.local/themes
 

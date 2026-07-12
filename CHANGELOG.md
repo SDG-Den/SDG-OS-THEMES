@@ -1,3 +1,10 @@
+#  sdg-themes update 0.3.2
+    
+## changelog 0.3.1 > 0.3.2
+
+updated to trigger matugen recompile before doing anything else.
+
+
 #  sdg-themes update 0.3.1
     
 ## changelog 0.3 > 0.3.1
