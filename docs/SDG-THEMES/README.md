@@ -1,46 +1,13 @@
-# Wallpaper System
+# SDG-OS-THEMES Documentation
 
-Wallpaper group switcher with DMS integration and per-group color settings.
+Wallpaper groups and visual theme system for SDG-OS.
 
-## Usage
+## Topics
 
-| Keybind | Action |
-|---------|--------|
-| SUPER+W | Open group selector |
-| ALT+W | Next wallpaper |
-| ALT+SHIFT+W | Previous wallpaper |
-
-## Structure
-
-Groups are folders in this directory. Each folder contains wallpapers and
-optionally a `wallpaper.conf`:
-
-```
-my-group/
-├── wallpaper.png
-├── wallpaper2.jpg
-└── wallpaper.conf
-```
-
-### wallpaper.conf
-
-```
-Theme_Category:dynamic    # generic / dynamic / custom / registry
-Generic_Color:dynamic     # color name, dynamic, or custom
-Matugen:vibrant           # palette variant
-Mode:dark                 # dark or light
-Preset:-                  # theme preset name
-```
-
-## Group behavior
-
-- Images cycle in alphabetical order
-- Single-image groups do not cycle
-- Cycling is handled by DMS, not the script
-
-## Command
-
-```sh
-wallpaper-select          # Opens FZF group picker
-wallpaper-select default  # Sets the "default" group directly
-```
+| # | Topic | Description |
+|---|-------|-------------|
+| 1 | [Getting Started](01-getting-started.md) | Keybinds, CLI usage, what happens when you switch |
+| 2 | [Group Categories Explained](02-group-categories-explained.md) | dynamic vs registry vs custom vs generic |
+| 3 | [wallpaper.conf Reference](03-wallpaperconf-reference.md) | All fields and valid values |
+| 4 | [Adding Custom Groups](04-adding-custom-groups.md) | How to create new wallpaper groups |
+| 5 | [Color Scheme Integration](05-color-scheme-integration.md) | How themes propagate to DMS, mangoWM, Firefox, WayShell, Ghostty |

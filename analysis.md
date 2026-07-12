@@ -4,7 +4,7 @@
 Wallpaper and Visual Theme Presets Module
 
 ## Description
-SDG-OS-THEMES provides a curated collection of ~150+ wallpaper images organized into 56 named wallpaper groups. Each group has a `wallpaper.conf` that tells DMS (DankMaterialShell) what color scheme, Material You palette variant, dark/light mode, and theme preset to apply when that group is selected.
+SDG-OS-THEMES provides a curated collection of ~150+ wallpaper images organized into 57 named wallpaper groups. Each group has a `wallpaper.conf` that tells DMS (DankMaterialShell) what color scheme, Material You palette variant, dark/light mode, and theme preset to apply when that group is selected.
 
 ## Usage
 After installation via `sdgpkg install sdg-themes`, wallpaper groups are available at `~/.config/SDG-THEMES/`.
@@ -58,7 +58,7 @@ SDG-OS-THEMES/
 │   ├── rose-pine/  snow/  solitude/  steamdeck/  surface/
 │   ├── system76/  terminal/  terminal-blue/  terminal-monochrome/
 │   ├── thinkpad/  tokyo-night/  vantablack/  yoga/  yuri/  zenbook/
-│   └── ... (56 total)
+│   └── ... (57 total)
 ├── local/SDG-THEMES/
 │   └── setwallpapergroup.sh      # Executable copy
 ├── docs/SDG-THEMES/README.md     # Full documentation

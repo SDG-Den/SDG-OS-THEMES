@@ -8,7 +8,7 @@ SDG-OS-THEMES provides a curated collection of ~150+ wallpapers organized into 5
 
 ## Features
 
-- **56 wallpaper groups** — categories: dynamic, registry, custom, generic
+- **57 wallpaper groups** — categories: dynamic, registry, custom, generic
 - **Material You integration** — dynamic groups auto-extract colors from the wallpaper
 - **DMS theme presets** — registry and custom groups apply matching DMS themes
 - **Keybind access** — SUPER+W opens interactive picker
