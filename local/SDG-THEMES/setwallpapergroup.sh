@@ -9,7 +9,7 @@ WP_CATEGORIES=$(ls "$WP_DIR" -l --group-directories-first | grep -e '^d.*' | awk
 
 WP_GROUPS=""
 
-FOR CAT in $WP_CATEGORIES; do 
+for CAT in $WP_CATEGORIES; do 
     THEMES=$(ls "$WP_DIR/$WP_CATEGORIES" -l --group-directories-first | grep -e '^d.*' | awk '{print $9}')
     WP_GROUPS="$WP_GROUPS
 $THEMES"
