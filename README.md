@@ -4,7 +4,7 @@ Wallpaper groups and visual theme system for SDG-OS.
 
 ## Description
 
-SDG-OS-THEMES provides a curated collection of ~150+ wallpapers organized into 56 named groups. Each group has a `wallpaper.conf` that tells the system what color scheme, Material You palette variant, dark/light mode, and DMS theme preset to apply on selection.
+SDG-OS-THEMES provides a curated collection of wallpapers organized into named groups. Each group has a `wallpaper.conf` that tells the system what color scheme, Material You palette variant, dark/light mode, and DMS theme preset to apply on selection.
 
 ## Features
 
