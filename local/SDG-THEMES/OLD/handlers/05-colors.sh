@@ -15,7 +15,7 @@ fi
 # The old script always set every field to avoid stale values from a previous theme.
 
 case "$PRESET_TYPE" in
-    DMS)
+    DMS|dms|Dms)
         category="registry"
         name="custom"
         matugen_scheme="scheme-tonal-sp"
