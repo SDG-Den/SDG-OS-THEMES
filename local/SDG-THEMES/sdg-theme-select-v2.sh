@@ -5,16 +5,14 @@ set -euo pipefail
 # Toggle debug output: set DEBUG=1 to see what's being found and parsed
 DEBUG="${DEBUG:-0}"
 
-# Resolve the directory this script lives in
-SELF_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Resolve the directory this script lives in (follows symlinks)
+SELF_DIR="$(dirname "$(readlink -f "$0")")"
 
 # ─── Paths ──────────────────────────────────────────────────
 
 # Directories to scan for theme subdirectories
 THEME_DIRS=(
     "$HOME/.local/themes"
-    "$HOME/.local/share/sdg-themes/modules"/*/themes
-    "$HOME/.config/SDG-THEMES"
 )
 
 # Directory for extra user-provided handler scripts
@@ -69,24 +67,46 @@ parse_ini_section() {
 # Return all available themes as "source/name|/path/to/theme"
 discover_themes() {
     local results=()
+
+    # scan a single directory for themes (one level deep)
+    scan_dir() {
+        local base="$1" source_name="$2"
+        for dir in "$base"/*/; do
+            [[ -d "$dir" ]] || continue
+            local theme_name
+            theme_name=$(basename "$dir")
+            if [[ -f "$dir/theme.conf" ]]; then
+                debug "  found v2 theme: $dir"
+                results+=("$source_name/$theme_name|${dir%/}")
+            elif [[ -f "$dir/wallpaper.conf" ]]; then
+                debug "  found v1 theme: $dir"
+                results+=("$source_name/$theme_name|${dir%/}")
+            fi
+        done
+    }
+
     for base in "${THEME_DIRS[@]}"; do
         debug "checking theme base: $base"
         [[ -d "$base" ]] || { debug "  (not a directory)"; continue; }
-        local source_name
-        source_name=$(basename "$base")
-        for dir in "$base"/*/; do
-            [[ -d "$dir" ]] || continue
-            if [[ -f "$dir/theme.conf" ]]; then
-                debug "  found v2 theme: $dir"
-            elif [[ -f "$dir/wallpaper.conf" ]]; then
-                debug "  found v1 theme: $dir"
-            else
-                continue
-            fi
-            local theme_name
-            theme_name=$(basename "$dir")
-            results+=("$source_name/$theme_name|${dir%/}")
+
+        # If the first level contains no config files, treat subdirs as categories
+        local has_direct_themes=false
+        for f in "$base"/*/theme.conf "$base"/*/wallpaper.conf; do
+            [[ -f "$f" ]] && { has_direct_themes=true; break; }
         done
+
+        if $has_direct_themes; then
+            scan_dir "$base" "$(basename "$base")"
+        else
+            # Recurse into category subdirectories
+            for catdir in "$base"/*/; do
+                [[ -d "$catdir" ]] || continue
+                local catname
+                catname=$(basename "$catdir")
+                debug "  scanning category: $catname"
+                scan_dir "$catdir" "$catname"
+            done
+        fi
     done
     printf '%s\n' "${results[@]}"
 }
