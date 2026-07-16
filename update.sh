@@ -11,5 +11,6 @@ cp -r "$WORKDIR/tips/"* "$HOME/.local/tips/"
 
 rm -rf "$HOME/.local/themes/SDG-THEMES" "$HOME/.local/themes/SDG-THEMES-BRANDS/" "$HOME/.local/themes/SDG-THEMES-DESTINY" "$HOME/.local/themes/SDG-THEMES-FUN"
 cp -r "$WORKDIR/themes/"* "$HOME/.local/themes/"
+sudo ln -sf $HOME/.local/SDG-THEMES/sdg-theme-select-v2.sh /usr/bin/sdgtheme
 
 chmod a+x "$HOME/.local/SDG-THEMES/setwallpapergroup.sh"
