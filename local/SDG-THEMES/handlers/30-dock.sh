@@ -1,4 +1,8 @@
 #!/bin/bash
+# 30-dock.sh — Show/hide the DMS dock
+# -------------------------------------
+# Sets showDock in DMS settings and reveals/hides via dock IPC.
+# -------------------------------------
 set -euo pipefail
 
 [[ -z "${DOCK_ENABLED:-}" ]] && exit 0
