@@ -1,24 +1,13 @@
 #!/bin/bash
-# 10-fonts.sh — Set DMS font and mangoWM jump/bar font
-# ------------------------------------------------------
-# Applies the font family to:
-#   1. DMS UI (settings set fontFamily)
-#   2. mangoWM's group bar (tab_bar_decorate_font_desc)
-#   3. mangoWM's jump mode labels (jump_label_decorate_font_desc)
-#
-# The mangoWM font values are written to a separate config file
-# (sdg-font.conf) that is sourced from config.conf.  This keeps
-# them outside the DMS-managed dms/ directory so they survive
-# DMS regenerating its own config files.
-# ------------------------------------------------------
 set -euo pipefail
 
+# Skip if no font family configured
 [[ -z "${FONT_FAMILY:-}" ]] && exit 0
 
-# DMS UI font — the shell interface
+# Apply font to DMS UI
 dms ipc call settings set fontFamily "$FONT_FAMILY" 2>/dev/null || true
 
-# mangoWM group bar + jump mode font
+# Write font to separate mangoWM config file (outside dms/ so DMS won't overwrite)
 MANGO_FONT_CONF="$HOME/.config/mango/sdg-font.conf"
 mkdir -p "$(dirname "$MANGO_FONT_CONF")"
 cat > "$MANGO_FONT_CONF" <<- EOF
@@ -27,7 +16,7 @@ cat > "$MANGO_FONT_CONF" <<- EOF
 	tab_bar_decorate_font_desc = $FONT_FAMILY 16
 	EOF
 
-# Ensure config.conf sources our font file
+# Source it from mangoWM's config.conf if not already present
 MANGO_CONFIG="$HOME/.config/mango/config.conf"
 if [[ -f "$MANGO_CONFIG" ]] && ! grep -q "sdg-font.conf" "$MANGO_CONFIG"; then
     echo "source=~/.config/mango/sdg-font.conf" >> "$MANGO_CONFIG"

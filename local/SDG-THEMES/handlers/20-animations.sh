@@ -1,14 +1,10 @@
 #!/bin/bash
-# 20-animations.sh — Toggle DMS animations on/off
-# -------------------------------------------------
-# Controls two DMS settings:
-#   animationSpeed        — 0 = off, 1 = normal speed
-#   enableRippleEffects   — Material You ripple click feedback
-# -------------------------------------------------
 set -euo pipefail
 
+# Skip if animations not configured
 [[ -z "${ANIMATIONS_ENABLED:-}" ]] && exit 0
 
+# Enable or disable DMS animation speed and ripple effects
 case "$ANIMATIONS_ENABLED" in
     true|1|yes)
         dms ipc call settings set animationSpeed 1 2>/dev/null || true
