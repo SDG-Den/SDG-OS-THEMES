@@ -1,13 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-# Skip if no font family configured
+# Exit early if no font family was configured
 [[ -z "${FONT_FAMILY:-}" ]] && exit 0
 
-# Apply font to DMS UI
+# Apply the font to the DMS shell UI
 dms ipc call settings set fontFamily "$FONT_FAMILY" 2>/dev/null || true
 
-# Write font to separate mangoWM config file (outside dms/ so DMS won't overwrite)
+# Write the font into a mangoWM config file (outside the dms/ directory so DMS won't overwrite it)
 MANGO_FONT_CONF="$HOME/.config/mango/sdg-font.conf"
 mkdir -p "$(dirname "$MANGO_FONT_CONF")"
 cat > "$MANGO_FONT_CONF" <<- EOF
@@ -16,7 +16,7 @@ cat > "$MANGO_FONT_CONF" <<- EOF
 	tab_bar_decorate_font_desc = $FONT_FAMILY 16
 	EOF
 
-# Source it from mangoWM's config.conf if not already present
+# Add a source line to mangoWM's config.conf so it picks up the font file
 MANGO_CONFIG="$HOME/.config/mango/config.conf"
 if [[ -f "$MANGO_CONFIG" ]] && ! grep -q "sdg-font.conf" "$MANGO_CONFIG"; then
     echo "source=~/.config/mango/sdg-font.conf" >> "$MANGO_CONFIG"

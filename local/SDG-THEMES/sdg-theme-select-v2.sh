@@ -2,28 +2,28 @@
 
 set -euo pipefail
 
-# Directory containing this script (for finding bundled handlers/)
+# Resolve the directory this script lives in
 SELF_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # ─── Paths ──────────────────────────────────────────────────
 
-# Directories scanned for theme subdirectories
+# Directories to scan for theme subdirectories
 THEME_DIRS=(
     "$HOME/.local/themes"
     "$HOME/.local/share/sdg-themes/modules"/*/themes
     "$HOME/.config/SDG-THEMES"
 )
 
-# Extra user-provided handler scripts (run after built-in handlers)
+# Directory for extra user-provided handler scripts
 USER_HANDLER_DIR="$HOME/.config/SDG-THEMES/handlers.d"
 
-# Hooks — wrapper scripts that receive full config as env vars
+# Pre/post hook directories — run before/after all handlers
 PRE_HOOK_DIR="$HOME/.config/SDG-THEMES/pre"
 POST_HOOK_DIR="$HOME/.config/SDG-THEMES/post"
 
 # ─── Helpers ────────────────────────────────────────────────
 
-# Run every *.sh in a directory, sorted by filename (alphabetical)
+# Run every *.sh in a directory, sorted alphabetically
 run_scripts_in() {
     local dir="$1"
     mkdir -p "$dir"
@@ -32,7 +32,7 @@ run_scripts_in() {
     done < <(find "$dir" -maxdepth 1 -name '*.sh' -type f -print0 | sort -z)
 }
 
-# Reload mangoWM config and send desktop notification
+# Reload mangoWM and send a desktop notification
 reload_and_notify() {
     sleep 0.2
     mmsg dispatch reload_config 2>/dev/null || true
@@ -40,7 +40,7 @@ reload_and_notify() {
         "you may have to manually reload ghostty (ctrl+r)" 2>/dev/null || true
 }
 
-# Extract key=value pairs from a single [section] in an INI file
+# Print key=value lines from a single INI section
 parse_ini_section() {
     local file="$1" section="$2"
     awk -v s="[$section]" '
@@ -57,7 +57,7 @@ parse_ini_section() {
 
 # ─── Discovery ──────────────────────────────────────────────
 
-# List available themes as "source/name|/path/to/theme"
+# Return all available themes as "source/name|/path/to/theme"
 discover_themes() {
     local results=()
     for base in "${THEME_DIRS[@]}"; do
@@ -76,7 +76,7 @@ discover_themes() {
 
 # ─── Menu ───────────────────────────────────────────────────
 
-# Interactive fzf picker with config preview
+# Open fzf to pick a theme, showing config preview
 show_menu() {
     local theme_list="$1"
     local selected_raw
@@ -88,13 +88,13 @@ show_menu() {
 
 # ─── Parser ─────────────────────────────────────────────────
 
-# Parse theme.conf (v2) or wallpaper.conf (v1) into global vars
+# Read the config file and populate global vars for every field
 parse_config() {
     local theme_dir="$1"
     local cfg_file="$theme_dir/theme.conf"
 
     if [[ -f "$cfg_file" ]]; then
-        # Parse v2 INI-format config section by section
+        # Parse v2 INI config — extract each section
         local raw
 
         raw=$(parse_ini_section "$cfg_file" Theme)
@@ -132,7 +132,7 @@ parse_config() {
         DOCK_ENABLED="${enabled:-}"
 
     elif [[ -f "$theme_dir/wallpaper.conf" ]]; then
-        # Fallback: parse legacy v1 flat-format wallpaper.conf
+        # Fall back to v1 wallpaper.conf — read 5 flat fields
         local wc="$theme_dir/wallpaper.conf"
         local tc gk mg mo pr
         tc=$(grep -e "^Theme_Category:" "$wc" | cut -d: -f2 | xargs)
@@ -141,7 +141,7 @@ parse_config() {
         mo=$(grep -e "^Mode:" "$wc" | cut -d: -f2 | xargs)
         pr=$(grep -e "^Preset:" "$wc" | cut -d: -f2 | xargs)
 
-        # Blank all v2-only fields
+        # v1 themes don't have v2-only fields — blank them all
         WALLPAPER=""
         FONT_FAMILY=""
         BORDER_THICKNESS=""
@@ -154,7 +154,7 @@ parse_config() {
         THEME_DESC=""
         MODE="$mo"
 
-        # Map v1 Theme_Category to v2 preset_type
+        # Translate v1 Theme_Category into v2 preset_type
         case "$tc" in
             dynamic|auto)
                 PRESET_TYPE="matugen"
@@ -175,12 +175,12 @@ parse_config() {
         esac
     fi
 
-    # Resolve relative wallpaper path against theme directory
+    # Prepend theme dir to relative wallpaper paths
     if [[ -n "$WALLPAPER" && ! "$WALLPAPER" = /* ]]; then
         WALLPAPER="$theme_dir/$WALLPAPER"
     fi
 
-    # Fallback: pick the first image found in the theme directory
+    # Fall back to first image found in the theme directory
     if [[ -z "$WALLPAPER" ]]; then
         WALLPAPER=$(find "$theme_dir" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.jpeg' \) | head -1 || true)
     fi
@@ -193,7 +193,7 @@ parse_config() {
 main() {
     local selected
 
-    # Discover all themes from configured directories
+    # Build theme list from all configured directories
     local theme_list
     theme_list=$(discover_themes)
     if [[ -z "$theme_list" ]]; then
@@ -201,7 +201,7 @@ main() {
         exit 1
     fi
 
-    # Pick theme: CLI argument or interactive fzf menu
+    # Select theme — either from CLI arg or interactive fzf menu
     if [[ -n "${1:-}" ]]; then
         selected=$(echo "$theme_list" | grep -m1 "/${1}$" | cut -d'|' -f2)
         if [[ -z "$selected" ]]; then
@@ -215,7 +215,7 @@ main() {
 
     echo "Selected: $(basename "$selected")"
 
-    # Parse config and export all values for child scripts
+    # Parse config and export everything for child scripts
     parse_config "$selected"
     export THEME_DIR THEME_NAME THEME_DESC
     export WALLPAPER
@@ -226,7 +226,7 @@ main() {
     export ANIMATIONS_ENABLED
     export DOCK_ENABLED
 
-    # Dispatch in order: pre → handlers → user-handlers → post → reload
+    # Run pre hooks, then bundled handlers, then user handlers, then post hooks, then reload
     run_scripts_in "$PRE_HOOK_DIR"
     run_scripts_in "$SELF_DIR/handlers"
     run_scripts_in "$USER_HANDLER_DIR"

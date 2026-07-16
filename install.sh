@@ -13,4 +13,6 @@ cp -r "$WORKDIR/themes/"* "$HOME/.local/themes/"
 
 chmod a+x "$HOME/.local/SDG-THEMES/setwallpapergroup.sh"
 
+sudo ln -sf $HOME/.local/SDG-THEMES/sdg-theme-select-v2.sh /usr/bin/sdgtheme
+
 ls "$HOME/.config/SDG-THEMES/" | head -5

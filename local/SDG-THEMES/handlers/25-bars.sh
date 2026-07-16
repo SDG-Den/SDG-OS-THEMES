@@ -1,14 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-# Skip if bar config is empty
+# Exit early if bar config is empty
 [[ -z "${ENABLED_BARS:-}" ]] && exit 0
+
+# jq is required to edit barConfigs[] in the settings JSON
 command -v jq &>/dev/null || { echo "jq required for bar settings" >&2; exit 0; }
 
 SFILE="$HOME/.config/DankMaterialShell/settings.json"
 CONDITIONS=()
 
-# Build jq conditions for each position name that is enabled
+# Build jq position conditions for each enabled bar (0=top, 1=bottom, 2=left, 3=right)
 for bar in top bottom left right; do
     if echo "$ENABLED_BARS" | grep -qw "$bar"; then
         case "$bar" in
@@ -20,9 +22,10 @@ for bar in top bottom left right; do
     fi
 done
 
+# Exit if none of the four positions matched
 [[ ${#CONDITIONS[@]} -eq 0 ]] && exit 0
 
-# Show bars matching enabled positions, hide all others
+# Join conditions with "or" and apply — bars matching a position get visible=true, others false
 IFS=" or "
 jq '.barConfigs |= map(.visible = (if '"${CONDITIONS[*]}"' then true else false end))' \
     "$SFILE" > "${SFILE}.tmp" && mv "${SFILE}.tmp" "$SFILE"

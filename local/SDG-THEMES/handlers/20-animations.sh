@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# Skip if animations not configured
+# Exit early if animations weren't configured
 [[ -z "${ANIMATIONS_ENABLED:-}" ]] && exit 0
 
-# Enable or disable DMS animation speed and ripple effects
+# Apply the animation toggle to DMS settings
 case "$ANIMATIONS_ENABLED" in
     true|1|yes)
         dms ipc call settings set animationSpeed 1 2>/dev/null || true

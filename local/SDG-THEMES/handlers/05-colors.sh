@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# Skip if no color preset configured
+# Exit early if no preset type was configured
 [[ -z "${PRESET_TYPE:-}" ]] && exit 0
 
-# Apply DMS settings based on preset type
+# Map preset_type to the corresponding DMS settings keys
 case "$PRESET_TYPE" in
     DMS)
         dms ipc call settings set currentThemeCategory registry 2>/dev/null || true
@@ -27,8 +27,10 @@ case "$PRESET_TYPE" in
         ;;
 esac
 
-# Toggle twice to force theme re-application, then set dark/light
+# Wait for settings to propagate, then force a full theme re-apply
 sleep 0.2
 dms ipc call theme toggle 2>/dev/null || true
 dms ipc call theme toggle 2>/dev/null || true
+
+# Switch to the requested light or dark mode
 [[ -n "${MODE:-}" ]] && dms ipc call theme "$MODE" 2>/dev/null || true
