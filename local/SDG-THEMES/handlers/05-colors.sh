@@ -4,28 +4,47 @@ set -euo pipefail
 # Exit early if no preset type was configured
 [[ -z "${PRESET_TYPE:-}" ]] && exit 0
 
-# Map preset_type to the corresponding DMS settings keys
+DMS_DIR="$HOME/.config/DankMaterialShell/themes"
+
+# Generate matugen colors from the current wallpaper
+if command -v matugen-compile &>/dev/null; then
+    matugen-compile 2>/dev/null || true
+fi
+
+# Determine all four settings based on preset_type, then apply them all at once.
+# The old script always set every field to avoid stale values from a previous theme.
+
 case "$PRESET_TYPE" in
     DMS)
-        dms ipc call settings set currentThemeCategory registry 2>/dev/null || true
-        dms ipc call settings set currentThemeName custom 2>/dev/null || true
-        dms ipc call settings set customThemeFile "$HOME/.config/DankMaterialShell/themes/$PRESET_ID/theme.json" 2>/dev/null || true
+        category="registry"
+        name="custom"
+        matugen_scheme="scheme-tonal-sp"
+        theme_file="$DMS_DIR/$PRESET_ID/theme.json"
         ;;
     generic)
-        dms ipc call settings set currentThemeCategory generic 2>/dev/null || true
-        dms ipc call settings set currentThemeName "$PRESET_ID" 2>/dev/null || true
+        category="generic"
+        name="$PRESET_ID"
+        matugen_scheme="scheme-tonal-sp"
+        theme_file="$DMS_DIR/-/theme.json"
         ;;
     matugen)
-        dms ipc call settings set currentThemeCategory dynamic 2>/dev/null || true
-        dms ipc call settings set currentThemeName dynamic 2>/dev/null || true
-        dms ipc call settings set matugenScheme "scheme-$PRESET_ID" 2>/dev/null || true
+        category="dynamic"
+        name="dynamic"
+        matugen_scheme="scheme-$PRESET_ID"
+        theme_file="$DMS_DIR/-/theme.json"
         ;;
     path)
-        dms ipc call settings set currentThemeCategory registry 2>/dev/null || true
-        dms ipc call settings set currentThemeName custom 2>/dev/null || true
-        dms ipc call settings set customThemeFile "$PRESET_ID" 2>/dev/null || true
+        category="registry"
+        name="custom"
+        matugen_scheme="scheme-tonal-sp"
+        theme_file="$PRESET_ID"
         ;;
 esac
+
+dms ipc call settings set currentThemeCategory "$category" 2>/dev/null || true
+dms ipc call settings set currentThemeName "$name" 2>/dev/null || true
+dms ipc call settings set matugenScheme "$matugen_scheme" 2>/dev/null || true
+dms ipc call settings set customThemeFile "$theme_file" 2>/dev/null || true
 
 # Wait for settings to propagate, then force a full theme re-apply
 sleep 0.2
