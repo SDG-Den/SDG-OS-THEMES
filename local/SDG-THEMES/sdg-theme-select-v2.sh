@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# Toggle debug output: set DEBUG=1 to see what's being found and parsed
+DEBUG="${DEBUG:-0}"
+
 # Resolve the directory this script lives in
 SELF_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -23,11 +26,14 @@ POST_HOOK_DIR="$HOME/.config/SDG-THEMES/post"
 
 # ─── Helpers ────────────────────────────────────────────────
 
+debug() { [[ "$DEBUG" == 1 ]] && echo "[DEBUG] $*" >&2; }
+
 # Run every *.sh in a directory, sorted alphabetically
 run_scripts_in() {
     local dir="$1"
     mkdir -p "$dir"
     while IFS= read -r -d '' f; do
+        debug "running: $f"
         bash "$f"
     done < <(find "$dir" -maxdepth 1 -name '*.sh' -type f -print0 | sort -z)
 }
@@ -40,7 +46,7 @@ reload_and_notify() {
         "you may have to manually reload ghostty (ctrl+r)" 2>/dev/null || true
 }
 
-# Print key=value lines from a single INI section
+# Print key="value" lines from a single INI section, with values quoted for eval safety
 parse_ini_section() {
     local file="$1" section="$2"
     awk -v s="[$section]" '
@@ -50,7 +56,10 @@ parse_ini_section() {
             split($0, a, "=")
             gsub(/^[[:space:]]+|[[:space:]]+$/, "", a[1])
             gsub(/^[[:space:]]+|[[:space:]]+$/, "", a[2])
-            print a[1] "=" a[2]
+            # Strip inline comments (everything after first # or ; that follows a space or tab)
+            gsub(/[[:space:]]*[#;].*$/, "", a[2])
+            gsub(/[[:space:]]+$/, "", a[2])
+            print a[1] "=\"" a[2] "\""
         }
     ' "$file"
 }
@@ -61,14 +70,22 @@ parse_ini_section() {
 discover_themes() {
     local results=()
     for base in "${THEME_DIRS[@]}"; do
-        [[ -d "$base" ]] || continue
+        debug "checking theme base: $base"
+        [[ -d "$base" ]] || { debug "  (not a directory)"; continue; }
         local source_name
         source_name=$(basename "$base")
         for dir in "$base"/*/; do
-            [[ -f "$dir/theme.conf" ]] || [[ -f "$dir/wallpaper.conf" ]] || continue
+            [[ -d "$dir" ]] || continue
+            if [[ -f "$dir/theme.conf" ]]; then
+                debug "  found v2 theme: $dir"
+            elif [[ -f "$dir/wallpaper.conf" ]]; then
+                debug "  found v1 theme: $dir"
+            else
+                continue
+            fi
             local theme_name
             theme_name=$(basename "$dir")
-            results+=("$source_name/$theme_name|$dir")
+            results+=("$source_name/$theme_name|${dir%/}")
         done
     done
     printf '%s\n' "${results[@]}"
@@ -94,45 +111,59 @@ parse_config() {
     local cfg_file="$theme_dir/theme.conf"
 
     if [[ -f "$cfg_file" ]]; then
-        # Parse v2 INI config — extract each section
-        local raw
+        debug "parsing v2 config: $cfg_file"
 
         raw=$(parse_ini_section "$cfg_file" Theme)
+        debug "  Theme: $raw"
         eval "$raw" 2>/dev/null || true
         THEME_NAME="${name:-}"
         THEME_DESC="${description:-}"
         WALLPAPER="${wallpaper:-}"
+        unset name description wallpaper
 
         raw=$(parse_ini_section "$cfg_file" Colors)
+        debug "  Colors: $raw"
         eval "$raw" 2>/dev/null || true
         PRESET_TYPE="${preset_type:-}"
         PRESET_ID="${preset_identifier:-}"
         MODE="${mode:-}"
+        unset preset_type preset_identifier mode
 
         raw=$(parse_ini_section "$cfg_file" Fonts)
+        debug "  Fonts: $raw"
         eval "$raw" 2>/dev/null || true
         FONT_FAMILY="${family:-}"
+        unset family
 
         raw=$(parse_ini_section "$cfg_file" Borders)
+        debug "  Borders: $raw"
         eval "$raw" 2>/dev/null || true
         BORDER_THICKNESS="${thickness:-}"
         CORNER_RADIUS="${corner_radius:-}"
         WIDGET_BORDERS="${widget_borders:-}"
+        unset thickness corner_radius widget_borders
 
         raw=$(parse_ini_section "$cfg_file" Bars)
+        debug "  Bars: $raw"
         eval "$raw" 2>/dev/null || true
         ENABLED_BARS="${enabled_bars:-}"
+        unset enabled_bars
 
         raw=$(parse_ini_section "$cfg_file" Animations)
+        debug "  Animations: $raw"
         eval "$raw" 2>/dev/null || true
         ANIMATIONS_ENABLED="${enabled:-}"
+        unset enabled
 
         raw=$(parse_ini_section "$cfg_file" Dock)
+        debug "  Dock: $raw"
         eval "$raw" 2>/dev/null || true
         DOCK_ENABLED="${enabled:-}"
+        unset enabled
 
     elif [[ -f "$theme_dir/wallpaper.conf" ]]; then
-        # Fall back to v1 wallpaper.conf — read 5 flat fields
+        debug "parsing v1 config: $theme_dir/wallpaper.conf"
+
         local wc="$theme_dir/wallpaper.conf"
         local tc gk mg mo pr
         tc=$(grep -e "^Theme_Category:" "$wc" | cut -d: -f2 | xargs)
@@ -141,7 +172,6 @@ parse_config() {
         mo=$(grep -e "^Mode:" "$wc" | cut -d: -f2 | xargs)
         pr=$(grep -e "^Preset:" "$wc" | cut -d: -f2 | xargs)
 
-        # v1 themes don't have v2-only fields — blank them all
         WALLPAPER=""
         FONT_FAMILY=""
         BORDER_THICKNESS=""
@@ -154,7 +184,6 @@ parse_config() {
         THEME_DESC=""
         MODE="$mo"
 
-        # Translate v1 Theme_Category into v2 preset_type
         case "$tc" in
             dynamic|auto)
                 PRESET_TYPE="matugen"
@@ -186,6 +215,17 @@ parse_config() {
     fi
 
     THEME_DIR="$theme_dir"
+
+    debug "parsed values:"
+    debug "  THEME_NAME=$THEME_NAME"
+    debug "  THEME_DESC=$THEME_DESC"
+    debug "  WALLPAPER=$WALLPAPER"
+    debug "  PRESET_TYPE=$PRESET_TYPE  PRESET_ID=$PRESET_ID  MODE=$MODE"
+    debug "  FONT_FAMILY=$FONT_FAMILY"
+    debug "  BORDER_THICKNESS=$BORDER_THICKNESS  CORNER_RADIUS=$CORNER_RADIUS  WIDGET_BORDERS=$WIDGET_BORDERS"
+    debug "  ENABLED_BARS=$ENABLED_BARS"
+    debug "  ANIMATIONS_ENABLED=$ANIMATIONS_ENABLED"
+    debug "  DOCK_ENABLED=$DOCK_ENABLED"
 }
 
 # ─── Main ───────────────────────────────────────────────────
@@ -198,20 +238,26 @@ main() {
     theme_list=$(discover_themes)
     if [[ -z "$theme_list" ]]; then
         echo "No themes found."
+        echo "Scanned: ${THEME_DIRS[*]}"
         exit 1
     fi
 
+    debug "available themes:"
+    while IFS= read -r line; do
+        debug "  ${line%|*}"
+    done <<< "$theme_list"
+
     # Select theme — either from CLI arg or interactive fzf menu
     if [[ -n "${1:-}" ]]; then
-        selected=$(echo "$theme_list" | grep -m1 "/${1}$" | cut -d'|' -f2)
+        selected=$(echo "$theme_list" | grep -m1 "/${1}|" | cut -d'|' -f2)
         if [[ -z "$selected" ]]; then
             echo "Theme '$1' not found."
             exit 1
         fi
     else
         selected=$(show_menu "$theme_list")
+        [[ -n "$selected" ]] || exit 0
     fi
-    [[ -n "$selected" ]] || exit 0
 
     echo "Selected: $(basename "$selected")"
 
