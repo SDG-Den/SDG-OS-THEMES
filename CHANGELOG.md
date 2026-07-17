@@ -1,3 +1,9 @@
+#  sdg-themes update 0.4
+    
+## changelog 0.3.3 > 0.4
+
+updated to new theming mode that can handle more things.
+
 #  sdg-themes update 0.3.3
     
 ## changelog 0.3.2 > 0.3.3

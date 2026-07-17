@@ -26,12 +26,12 @@ if [[ $SELECTED == "" ]]; then
     SELECTED=$(echo "$WP_GROUPS" | fzf --layout=reverse)
 fi
 echo "user selected $SELECTED"
-
+echo "setting wallpaper"
 dms ipc call wallpaper set "$WP_DIR/$SELECTED/$(ls -1 "$WP_DIR/$SELECTED" | grep -v ".conf" | head -n 1)"
 sleep 0.2
 dms ipc call wallpaper next
 dms ipc call wallpaper prev
-
+sleep 0.01
 
 
 ## todo: add other settings
@@ -39,53 +39,84 @@ dms ipc call wallpaper prev
 # fetch info from file
 source $WP_DIR/$SELECTED/theme.conf
 
-
 # handle preset type and setting
 echo "handling colors"
-sleep 0.2
-theme_preset_type=matugen
-theme_preset_setting=vibrant
-
+sleep 1
+echo "preset type: $theme_preset_type"
+echo "preset setting: $theme_preset_setting"
 case $theme_preset_type in
     matugen)
-    dms ipc call settings set currentThemeCategory dynamic
-    dms ipc call settings set matugenScheme scheme-$theme_preset_setting
+    echo "setting matugen scheme to $theme_preset_setting"
+    ThemeCategory=dynamic
+    Matugen=$theme_preset_setting
+    ThemeName=dynamic
+    Preset="/home/$(whoami)/.config/DankMaterialShell/themes/$theme_preset_setting/theme.json"
     ;;
-    dms)
-    dms ipc call settings set currentThemeCategory registry
-    dms ipc call settings set customThemeFile "/home/$(whoami)/.config/DankMaterialShell/themes/$theme_preset_setting/theme.json"
+    DMS|dms|Dms)
+    echo "setting theme file to $theme_preset_setting"
+    ThemeCategory=custom
+    Matugen=vibrant
+    ThemeName=custom
+    Preset="/home/$(whoami)/.config/DankMaterialShell/themes/$theme_preset_setting/theme.json"
     ;;
     directory)
-    dms ipc call settings set currentThemeCategory custom
-    dms ipc call settings set customThemeFile "$theme_preset_setting"
+    echo "setting theme file to $theme_preset_setting"
+    ThemeCategory=custom
+    Matugen=vibrant
+    ThemeName=custom
+    Preset="$theme_preset_setting"
     ;;
     color)
-    dms ipc call settings set currentThemeCategory generic
-    dms ipc call settings set currentThemeName $theme_preset_setting
+    echo "setting theme name to $theme_preset_setting"
+    ThemeCategory=generic
+    Matugen=vibrant
+    ThemeName=$theme_preset_setting
+    Preset=none
     ;;
 
 esac
+
+#generic is registry
+dms ipc call settings set currentThemeCategory $ThemeCategory
+
+
+# auto > matugen template
+dms ipc call settings set matugenScheme scheme-$Matugen
+
+dms ipc call settings set currentThemeName $ThemeName
+# browse > preset
+dms ipc call settings set customThemeFile "$Preset"
+sleep 0.2
+dms restart
+sleep 2
+dms ipc call theme toggle
+dms ipc call theme toggle 
+
 # handle theme mode
 echo "handling theme mode"
+echo "mode is $theme_mode"
 sleep 0.2
-theme_mode=dark
 dms ipc call theme $theme_mode
-
+sleep 0.01
 
 # handle borders
 echo "handling borders"
+echo "thickness: $theme_border_thickness"
+echo "radius: $theme_corner_radius"
 sleep 0.2
-theme_border_thickness=2
-theme_corner_radius=8
-dms ipc call settings set mangoLayoutBorderSize "$theme_border_thickness"
-dms ipc call settings set cornerRadius "$theme_corner_radius"
-dms ipc call settings set mangoLayoutRadiusOverride "$theme_corner_radius"
 
+echo "setting mango border size to $theme_border_thickness"
+dms ipc call settings set mangoLayoutBorderSize "$theme_border_thickness" # didnt apply
+sleep 0.01
+echo "setting corner radius to $theme_corner_radius"
+dms ipc call settings set cornerRadius "$theme_corner_radius"
+sleep 0.01
+echo "setting mango corner radius to $theme_corner_radius"
+dms ipc call settings set mangoLayoutRadiusOverride "$theme_corner_radius" # didnt apply
+sleep 0.01
 # handle font
 echo "handling font"
 sleep 0.2
-theme_font="JetBrainsMono Nerd Font"
-theme_animations=0
 MANGO_FONT_CONF="$HOME/.config/mango/sdg-font.conf"
 mkdir -p "$(dirname "$MANGO_FONT_CONF")"
 cat > "$MANGO_FONT_CONF" <<- EOF
@@ -98,8 +129,15 @@ cat > "$MANGO_FONT_CONF" <<- EOF
     jump_label_decorate_corner_radius = $theme_corner_radius
     animations = $theme_animations
 	EOF
+echo "configuration:"
+cat $MANGO_FONT_CONF
+sleep 0.01
 # handle bars
 echo "handling bars"
+echo "bar 1: $theme_bar1"
+echo "bar 2: $theme_bar2"
+echo "bar 3: $theme_bar3"
+echo "bar 4: $theme_bar4"
 sleep 0.2
 if [ "$theme_bar1" == "true" ]; then
     dms ipc call bar reveal index 0
@@ -107,30 +145,38 @@ if [ "$theme_bar1" == "true" ]; then
 else
     dms ipc call bar hide index 0
 fi
+echo "handled bar 1"
+sleep 0.01
 if [ "$theme_bar2" == "true" ]; then
     dms ipc call bar reveal index 1
 
 else
     dms ipc call bar hide index 1
 fi
+echo "handled bar 2"
+sleep 0.01
 if [ "$theme_bar3" == "true" ]; then
     dms ipc call bar reveal index 2
 
 else
     dms ipc call bar hide index 2
 fi
+echo "handled bar 3"
+sleep 0.01
 if [ "$theme_bar4" == "true" ]; then
     dms ipc call bar reveal index 3
 
 else
     dms ipc call bar hide index 3
 fi
+echo "handled bar 4"
+sleep 0.01
 
 
 
 # handle dock
-theme_dock=false
 echo "handling dock"
+echo "dock mode: $theme_dock"
 sleep 0.2
 if [ "$theme_dock" == "true" ]; then
     dms ipc call settings set showDock true
@@ -139,14 +185,18 @@ else
     dms ipc call settings set showDock false
     dms ipc call dock hide 
 fi
+sleep 0.01
 
 # handle frame
-theme_frame=false
 echo "handling frame"
+echo "frame mode: $theme_frame"
 sleep 0.2
 if [ "$theme_frame" == "true" ]; then
     dms ipc call settings set frameEnabled true
 else
     dms ipc call settings set frameEnabled false
 fi
+sleep 0.01
+
+
 
