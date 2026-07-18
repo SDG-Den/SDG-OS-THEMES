@@ -180,15 +180,15 @@ echo "handling corner radius css"
 RADIUS_CSS_DIR="$HOME/.config/SDG-WAYSHELL-CONFIGS"
 mkdir -p "$RADIUS_CSS_DIR"
 cat > "$RADIUS_CSS_DIR/theme-overrides.css" <<- EOF
-	:root {
-	    --theme-radius: ${theme_corner_radius}px;
+	* {
+	    border-radius: ${theme_corner_radius}px;
 	}
 	EOF
 MONOCLE_CSS_DIR="$HOME/.config/SDG-MONOCLE"
 if [ -d "$MONOCLE_CSS_DIR" ]; then
     cat > "$MONOCLE_CSS_DIR/theme-overrides.css" <<- EOF
-	:root {
-	    --theme-radius: ${theme_corner_radius}px;
+	* {
+	    border-radius: ${theme_corner_radius}px;
 	}
 	EOF
 fi
