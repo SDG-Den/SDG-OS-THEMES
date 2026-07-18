@@ -2,18 +2,26 @@
 
 SELECTED="$1"
 CURTHEME=$(cat $HOME/.config/theme.state)
-
+WP_DIR=~/.local/themes
 case $SELECTED in
     clone)
     echo "[sdgtheme] cloning $CURTHEME"
     echo "please provide a new name:"
     read -p "theme name: user/" THEMENAME
-    mkdir -p $HOME/.local/themes/user
-    cp -r $CURTHEME $HOME/.local/themes/user/$THEMENAME
+    mkdir -p $WP_DIR/user
+    cp -r $WP_DIR/$CURTHEME $WP_DIR/user/$THEMENAME
+    read -n 1 -p "do you want to switch to this theme now? (y/N): " CHOICE
+    if [ "$CHOICE" == "y" ]; then
+        sdgtheme user/$THEMENAME
+    fi
     exit 0
     ;;
     edit)
     ${EDITOR:-micro} $CURTHEME/theme.conf
+    read -n 1 -p "do you want to reload the theme now? (y/N): " CHOICE
+    if [ "$CHOICE" == "y" ]; then
+        sdgtheme $CURTHEME
+    fi
     exit 0
     ;;
     help)
@@ -34,7 +42,7 @@ which matugen-compile && matugen-compile
 CONF_FILE="$HOME/.config/SDG-THEMES/sdg-themes.conf"
 [ -f "$CONF_FILE" ] && source "$CONF_FILE"
 
-WP_DIR=~/.local/themes
+
 
 WP_CATEGORIES=$(ls "$WP_DIR" -1 )
 
@@ -61,7 +69,7 @@ sleep 0.2
 dms ipc call wallpaper next
 dms ipc call wallpaper prev
 sleep 0.01
-echo "$WP_DIR/$SELECTED" > ~/.config/theme.state
+echo "$SELECTED" > ~/.config/theme.state
 
 ## todo: add other settings
 
