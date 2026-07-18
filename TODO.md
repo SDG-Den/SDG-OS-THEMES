@@ -10,3 +10,6 @@
 - [ ] Wallpaper images exist at referenced paths
 - [ ] Dynamic group rotation
 - [ ] Custom group import
+
+- re-add matugen btop/yazi configs.
+
