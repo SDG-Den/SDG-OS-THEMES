@@ -2,7 +2,7 @@ Package Name: sdg-themes
 Descriptive Name: SDG OS Wallpaper Themes
 Source: https://github.com/SDG-Den/SDG-OS-THEMES
 Maintainer: SDGDen
-Version:0.5
+Version:0.5.1
 
 Dependencies: 
 DMS (DankMaterialShell), mmsg, fzf, notify-send

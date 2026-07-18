@@ -1,3 +1,9 @@
+#  sdg-themes update 0.5.1
+    
+## changelog 0.5 > 0.5.1
+
+added initial sdgfont config stuff
+
 #  sdg-themes update 0.5
     
 ## changelog 0.4 > 0.5
