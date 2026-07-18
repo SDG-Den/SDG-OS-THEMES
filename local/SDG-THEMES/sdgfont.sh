@@ -75,7 +75,7 @@ gsettings set org.gnome.desktop.interface font-name "$FULLFONT"
 
 MOZ_DIR="$HOME/.config/mozilla/firefox"
 MOZ_PROFILE=$(cat $MOZ_DIR/profiles.ini | grep -e "^Default=.*" | cut -d= -f2 | head -n 1)
-MOZ_USERFILE="$MOZ_DIR/$MOZ_PROFILE/user.js"
+MOZ_USERFILE="$MOZ_DIR/$MOZ_PROFILE/prefs.js"
 echo "MOZ userfile is $MOZ_USERFILE"
 if [ -f "$MOZ_USERFILE" ]; then
     if grep -q "user_pref(\"font.name.monospace.x-western\"," "$MOZ_USERFILE"; then
