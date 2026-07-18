@@ -9,7 +9,7 @@ case $SELECTED in
     echo "please provide a new name:"
     read -p "theme name: user/" THEMENAME
     mkdir -p $HOME/.local/themes/user
-    cp -r $CURTHEME $HME/.local/themes/user/$THEMENAME
+    cp -r $CURTHEME $HOME/.local/themes/user/$THEMENAME
     exit 0
     ;;
     edit)
