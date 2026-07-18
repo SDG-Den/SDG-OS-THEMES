@@ -1,15 +1,15 @@
 #!/bin/bash
 
 SELECTED="$1"
-CURTHEME=$(cat ~/.config/theme.state)
+CURTHEME=$(cat $HOME/.config/theme.state)
 
 case $SELECTED in
     clone)
     echo "[sdgtheme] cloning $CURTHEME"
     echo "please provide a new name:"
     read -p "theme name: user/" THEMENAME
-    mkdir -p "~/.local/themes/user"
-    cp -r $CURTHEME ~/.local/themes/user/$THEMENAME
+    mkdir -p $HOME/.local/themes/user
+    cp -r $CURTHEME $HME/.local/themes/user/$THEMENAME
     exit 0
     ;;
     edit)
