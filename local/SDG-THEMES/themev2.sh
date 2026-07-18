@@ -17,7 +17,7 @@ case $SELECTED in
     exit 0
     ;;
     edit)
-    ${EDITOR:-micro} $CURTHEME/theme.conf
+    ${EDITOR:-micro} $W_DIR/$CURTHEME/theme.conf
     read -n 1 -p "do you want to reload the theme now? (y/N): " CHOICE
     if [ "$CHOICE" == "y" ]; then
         sdgtheme $CURTHEME
