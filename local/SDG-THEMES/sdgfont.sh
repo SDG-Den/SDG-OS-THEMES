@@ -70,3 +70,28 @@ fi
 
 # apply to gtk
 gsettings set org.gnome.desktop.interface font-name "$FULLFONT"
+
+# apply to firefox
+
+MOZ_DIR="$HOME/.config/mozilla/firefox"
+MOZ_PROFILE=$(cat $MOZ_DIR/profiles.ini | grep -e "^Default=.*" | cut -d= -f2)
+MOZ_USERFILE="$MOZ_DIR/$MOZ_PROFILE/user.js"
+if [ -f "$MOZ_USERFILE" ]; then
+    if grep -q "user_pref(\"font.name.monospace.x-western\"," "$MOZ_USERFILE"; then
+        sed -i "s/user_pref(\"font.name.monospace.x-western\", \".*\");/s/user_pref(\"font.name.monospace.x-western\", \"$FULLFONT\");" "$MOZ_USERFILE"
+    fi
+    if grep -q "user_pref(\"font.name.sans-serif.x-western\"," "$MOZ_USERFILE"; then
+        sed -i "s/user_pref(\"font.name.sans-serif.x-western\", \".*\");/s/user_pref(\"font.name.sans-serif.x-western\", \"$FULLFONT\");" "$MOZ_USERFILE"
+    fi
+    if grep -q "user_pref(\"font.name.serif.x-western\"," "$MOZ_USERFILE"; then
+        sed -i "s/user_pref(\"font.name.serif.x-western\", \".*\");/s/user_pref(\"font.name.serif.x-western\", \"$FULLFONT\");" "$MOZ_USERFILE"
+    fi
+else
+    cat > "$MOZ_USERFILE" <<- EOF
+user_pref("font.name.monospace.x-western", "$FULLFONT");
+user_pref("font.name.sans-serif.x-western", "$FULLFONT");
+user_pref("font.name.serif.x-western", "$FULLFONT");
+EOF
+
+
+

@@ -132,8 +132,10 @@ dms ipc call theme toggle
 dms ipc call theme toggle 
 
 # handle font
-sdgfont $theme_font
-sleep 2
+if [ "$apply_font" != "false" ]; then
+    sdgfont $theme_font
+    sleep 1
+fi
 
 # handle theme mode
 echo "handling theme mode"
