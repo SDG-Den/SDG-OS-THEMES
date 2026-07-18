@@ -76,8 +76,6 @@ echo "$SELECTED" > ~/.config/theme.state
 # fetch info from file
 source $WP_DIR/$SELECTED/theme.conf
 
-# handle font
-sdgfont $theme_font
 
 
 # handle preset type and setting
@@ -132,6 +130,10 @@ dms restart
 sleep 2
 dms ipc call theme toggle
 dms ipc call theme toggle 
+
+# handle font
+sdgfont $theme_font
+sleep 2
 
 # handle theme mode
 echo "handling theme mode"
