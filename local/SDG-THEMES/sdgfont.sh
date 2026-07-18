@@ -96,3 +96,13 @@ EOF
 fi
 
 
+# apply to discord
+VESKTOP_CONF="$HOME/.config/vesktop/settings/quickCss.css"
+cat > "$VESKTOP_CONF" <<- EOF
+* {
+	    font-family: "$FULLFONT";
+}
+
+EOF
+
+
