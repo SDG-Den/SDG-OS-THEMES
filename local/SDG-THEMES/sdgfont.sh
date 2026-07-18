@@ -72,7 +72,7 @@ fi
 GTK3_CONF="$HOME/.config/gtk-3.0/settings.ini"
 if [ -f "$GTK3_CONF" ]; then
     if grep -q "gtk-font-name=" "$GTK3_CONF"; then
-        sed -i "gtk-font-name=.*/gtk-font-name=$FULLFONT 11" "$GTK3_CONF"
+        sed -i "s/gtk-font-name=.*/gtk-font-name=$FULLFONT 11/" "$GTK3_CONF"
         echo "gtk3 applied"
     fi
 fi
@@ -80,7 +80,7 @@ fi
 GTK4_CONF="$HOME/.config/gtk-4.0/settings.ini"
 if [ -f "$GTK4_CONF" ]; then
     if grep -q "gtk-font-name=" "$GTK4_CONF"; then
-        sed -i "gtk-font-name=.*/gtk-font-name=$FULLFONT 11" "$GTK4_CONF"
+        sed -i "s/gtk-font-name=.*/gtk-font-name=$FULLFONT 11/" "$GTK4_CONF"
         echo "gtk4 applied"
     fi
 fi
