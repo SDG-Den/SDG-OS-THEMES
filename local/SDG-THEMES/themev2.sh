@@ -1,6 +1,29 @@
 #!/bin/bash
 
 SELECTED="$1"
+CURTHEME=$(cat ~/.config/theme.state)
+
+case $SELECTED in
+    clone)
+    echo "[sdgtheme] cloning $CURTHEME"
+    echo "please provide a new name:"
+    read -p "theme name: user/" THEMENAME
+    mkdir -p "~/.local/themes/user"
+    cp -r $CURTHEME ~/.local/themes/user/$THEMENAME
+    ;;
+    edit)
+    ${EDITOR:-micro} $CURTHEME/theme.conf
+    ;;
+    help)
+    echo "[sdgtheme]"
+    echo ""
+    echo "commands:"
+    echo "sdgtheme - shows the interactive FZF theme picker"
+    echo "sdgtheme <theme> - applies that theme"
+    echo "sdgtheme clone - clones your current theme to a new theme under the user/ category"
+    echo "sdgtheme edit - edits your current theme"
+    ;;
+esac
 
 which matugen-compile && matugen-compile
 
@@ -35,7 +58,7 @@ sleep 0.2
 dms ipc call wallpaper next
 dms ipc call wallpaper prev
 sleep 0.01
-
+echo "$WP_DIR/$SELECTED" > ~/.config/theme.state
 
 ## todo: add other settings
 
