@@ -10,9 +10,11 @@ case $SELECTED in
     read -p "theme name: user/" THEMENAME
     mkdir -p "~/.local/themes/user"
     cp -r $CURTHEME ~/.local/themes/user/$THEMENAME
+    exit 0
     ;;
     edit)
     ${EDITOR:-micro} $CURTHEME/theme.conf
+    exit 0
     ;;
     help)
     echo "[sdgtheme]"
@@ -22,6 +24,7 @@ case $SELECTED in
     echo "sdgtheme <theme> - applies that theme"
     echo "sdgtheme clone - clones your current theme to a new theme under the user/ category"
     echo "sdgtheme edit - edits your current theme"
+    exit 0
     ;;
 esac
 
