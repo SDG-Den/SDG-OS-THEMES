@@ -127,7 +127,7 @@ dms ipc call settings set currentThemeName $ThemeName
 dms ipc call settings set customThemeFile "$Preset"
 sleep 0.2
 dms restart
-sleep 2
+sleep 5
 dms ipc call theme toggle
 dms ipc call theme toggle 
 
