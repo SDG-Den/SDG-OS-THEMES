@@ -5,9 +5,9 @@ FONT="$@"
 
 # get different versions of the font:
 FONTLIST=$(fc-list | cut -d: -f2)
-FULLFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f1 | head -n 1)
-SHORTFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f2 | head -n 1)
-STYLEFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f3 | head -n 1)
+FULLFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f1 | head -n 1 | sed 's/^ //')
+SHORTFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f2 | head -n 1| sed 's/^ //')
+STYLEFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f3 | head -n 1| sed 's/^ //')
 
 echo " [sdgfont] applying following font:"
 echo "input: $FONT"
@@ -57,11 +57,16 @@ if [ -f "$GHOSTTY_CONF" ]; then
     else
         echo "font-family = $FULLFONT" >> "$GHOSTTY_CONF"
     fi
-    echo "sdg-font-apply: applied font to Ghostty"
 fi
 
 # apply to vscode
-
+VSCODE_CONF="$HOME/.config/Code - OSS/User/settings.json"
+if [ -f "$GHOSTTY_CONF" ]; then
+    if grep -q "\"editor.fontFamily\":" "$VSCODE_CONF"; then
+        sed -i "s/\"editor.fontFamily\": \".*\"/\"editor.fontFamily\": \"\'$FULLFONT\', monospace\"/" "$VSCODE_CONF"
+        echo "vscode applied"
+    fi
+fi
 
 # apply to... discord? 
 
