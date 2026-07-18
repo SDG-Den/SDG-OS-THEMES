@@ -2,6 +2,9 @@
 
 WORKDIR="$HOME/.cache/SDG-PKG/sdg-themes"
 mkdir -p $HOME/.local/themes
+
+cp -r "$WORKDIR/config/"* "$HOME/.config/"
+
 rm -rf "$HOME/.local/SDG-THEMES"
 cp -r "$WORKDIR/local/"* "$HOME/.local/"
 
@@ -14,3 +17,4 @@ cp -r "$WORKDIR/themes/"* "$HOME/.local/themes/"
 sudo ln -sf $HOME/.local/SDG-THEMES/themev2.sh /usr/bin/sdgtheme
 
 chmod a+x "$HOME/.local/SDG-THEMES/setwallpapergroup.sh"
+chmod a+x "$HOME/.local/SDG-THEMES/sdg-font-apply.sh"

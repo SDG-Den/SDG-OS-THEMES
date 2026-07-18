@@ -12,6 +12,7 @@ cp -r "$WORKDIR/tips/"* "$HOME/.local/tips/"
 cp -r "$WORKDIR/themes/"* "$HOME/.local/themes/"
 
 chmod a+x "$HOME/.local/SDG-THEMES/setwallpapergroup.sh"
+chmod a+x "$HOME/.local/SDG-THEMES/sdg-font-apply.sh"
 
 sudo ln -sf $HOME/.local/SDG-THEMES/themev2.sh /usr/bin/sdgtheme
 

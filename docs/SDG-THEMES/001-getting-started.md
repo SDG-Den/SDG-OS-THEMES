@@ -4,24 +4,33 @@
 
 | Keybind | Action |
 |---------|--------|
-| SUPER+W | Open wallpaper group selector (FZF picker) |
-| ALT+W | Next wallpaper in current group |
-| ALT+SHIFT+W | Previous wallpaper in current group |
+| SUPER+W | Open theme selector (FZF picker) |
+| ALT+W | Next wallpaper in current theme group |
+| ALT+SHIFT+W | Previous wallpaper in current theme group |
 
 ## CLI
 
 ```sh
-wallpaper-select              # Interactive FZF group picker
-wallpaper-select <group-name> # Switch to a group directly
+sdgtheme                    # Interactive FZF picker
+sdgtheme SDG-THEMES/nord    # Switch to a specific theme
+sdgtheme nord               # Category-relative name works
 ```
 
 ## What Happens When You Switch
 
-1. First image in the selected group directory is set as wallpaper via `dms ipc call wallpaper set`
-2. `wallpaper.conf` is parsed to determine theme behavior
-3. DMS restarts to apply changes
-4. A config reload is dispatched via `mmsg` for other UI components
+1. Wallpaper is set via DMS
+2. `theme.conf` is sourced — all theme fields are read
+3. Color scheme is applied (matugen/DMS/generic/directory)
+4. Mode (dark/light), border thickness, and corner radius are set
+5. mangoWM font is written to `~/.config/mango/sdg-font.conf`
+6. Font is propagated to DMS, Ghostty, VSCode, Waybar, Monocle
+7. Bars 0–3 are shown or hidden per `theme_bar1`–`theme_bar4`
+8. Dock is revealed or hidden
+9. Frame is enabled or disabled
+10. Animations are enabled or disabled
+11. `theme-overrides.css` is generated for Waybar/Monocle corner radius (`--theme-radius`)
+12. Fastfetch logo and config are updated via `sdgfetch` (if installed)
 
-## Cycling Within a Group
+## Cycling Within a Theme
 
-If a group has multiple images, pressing SUPER+W again cycles to the next image. Images cycle in alphabetical order. Single-image groups do not cycle. Cycling is handled by DMS, not the script.
+Themes with multiple wallpapers can cycle. Pressing ALT+W/ALT+SHIFT+W cycles forward/backward.

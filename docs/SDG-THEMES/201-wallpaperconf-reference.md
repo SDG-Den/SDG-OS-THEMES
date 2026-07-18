@@ -1,59 +1,101 @@
-# wallpaper.conf Reference
+# theme.conf Reference
 
-Each wallpaper group directory can contain a `wallpaper.conf` that defines theme behavior.
+Each theme directory contains a `theme.conf` that defines the full visual theme.
 
 ## Format
 
-```
-Theme_Category:dynamic|registry|custom|generic
-Generic_Color:color-name|dynamic|custom
-Matugen:vibrant|tonal-spot|neutral|fruit-salad
-Mode:dark|light
-Preset:preset-name|-
+```sh
+theme_name=nord
+theme_wallpaper=nord-1.jpg
+theme_preset_type=matugen
+theme_preset_setting=vibrant
+theme_mode=dark
+theme_font="JetBrainsMono Nerd Font"
+theme_border_thickness=2
+theme_corner_radius=14
+theme_bar1=false
+theme_bar2=true
+theme_bar3=false
+theme_bar4=false
+theme_dock=false
+theme_frame=false
+theme_animations=1
+theme_fetch_logo=nord
+theme_fetch_conf=left-frame-dotted.jsonc
 ```
 
 ## Fields
 
-### Theme_Category
+### theme_preset_type
 
 | Value | Behavior |
 |-------|----------|
-| `dynamic` | Matugen auto-extracts colors from the wallpaper |
-| `registry` | A predefined DMS theme preset is applied |
-| `custom` | A hardware-brand custom preset is applied |
-| `generic` | A fixed color name is used |
+| `matugen` | Matugen auto-extracts colors from the wallpaper |
+| `DMS` / `dms` | A predefined DMS theme preset is applied |
+| `directory` | Path to a DMS theme JSON file |
+| `color` | A fixed Material You color name is used |
 
-### Generic_Color
+### theme_preset_setting
 
-| Value | Behavior |
-|-------|----------|
-| `dynamic` | Color extracted from wallpaper (used with dynamic category) |
-| `custom` | Uses a DMS theme preset (used with registry/custom categories) |
-| `blue` / `purple` / `green` / `orange` / `red` / `cyan` / `pink` / `amber` / `coral` / `white` | Fixed color (used with generic category) |
+Depends on `theme_preset_type`:
+- `matugen` → Matugen variant: `vibrant`, `tonal-spot`, `neutral`, `fruit-salad`, `fidelity`, `content`, `expressive`, `monochrome`, `rainbow`
+- `DMS` → DMS preset folder name (e.g., `nord`, `thinkpad`)
+- `directory` → Absolute path to a `theme.json` file
+- `color` → Color name: `blue`, `purple`, `green`, `orange`, `red`, `cyan`, `pink`, `amber`, `coral`, `white`
 
-### Matugen
-
-Material You palette variant.
-
-| Value | Description |
-|-------|-------------|
-| `vibrant` | High saturation, colorful palette |
-| `tonal-spot` | Subtle, tonal palette |
-| `neutral` | Desaturated, neutral palette |
-| `fruit-salad` | Playful, varied palette |
-| `fidelity` | Faithful to source colors |
-| `content` | Content-aware palette |
-| `expressive` | Expressive color extraction |
-| `monochrome` | Single-hue grayscale palette |
-| `rainbow` | Full spectrum palette |
-
-### Mode
+### theme_mode
 
 | Value | Description |
 |-------|-------------|
 | `dark` | Dark color scheme |
 | `light` | Light color scheme |
 
-### Preset
+### theme_font
 
-A DMS theme preset applied from `~/.config/DankMaterialShell/themes/`. Use the folder names directly. Set to `-` when not used (dynamic/generic categories).
+Font applied to mangoWM, DMS, Ghostty, VSCode, Waybar, and Monocle. Skipped if `apply_font=false` in `sdg-themes.conf`.
+
+### theme_border_thickness
+
+mangoWM border width in pixels.
+
+### theme_corner_radius
+
+Corner radius in pixels — applied to mangoWM groups/bars and written to `--theme-radius` in Waybar/Monocle CSS overrides.
+
+### theme_bar1–theme_bar4
+
+Controls Waybar bar visibility for bars 0–3.
+
+| Value | Effect |
+|-------|--------|
+| `true` | Bar is revealed |
+| `false` | Bar is hidden |
+
+### theme_dock
+
+| Value | Effect |
+|-------|--------|
+| `true` | Dock is shown |
+| `false` | Dock is hidden |
+
+### theme_frame
+
+| Value | Effect |
+|-------|--------|
+| `true` | Frame is enabled |
+| `false` | Frame is disabled |
+
+### theme_animations
+
+| Value | Effect |
+|-------|--------|
+| `1` | mangoWM animations enabled |
+| `0` | mangoWM animations disabled |
+
+### theme_fetch_logo
+
+sdgfetch logo name. If the logo does not yet exist in sdgfetch, it should be listed in NEW-LOGOS.md with a description of the image to create.
+
+### theme_fetch_conf
+
+sdgfetch config template name (e.g., `minimal.jsonc`, `screenfetch.jsonc`). These are fetch layout presets, not logos.

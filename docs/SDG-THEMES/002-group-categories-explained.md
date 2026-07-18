@@ -1,19 +1,25 @@
-# Group Categories Explained
+# Theme Preset Types
 
-Each wallpaper group has a `Theme_Category` field that determines how colors are applied.
+Each theme's `theme_preset_type` field determines how colors are applied.
 
-## dynamic
+## matugen
 
-Colors are extracted automatically from the wallpaper using Matugen (Material You). The `Generic_Color` field is set to `dynamic`, and no preset is used.
+Colors are extracted automatically from the wallpaper using Matugen (Material You). The `theme_preset_setting` selects the Matugen variant (vibrant, tonal-spot, neutral, etc.).
 
-## registry
+Used by most color-scheme themes (nord, catppuccin, gruvbox, etc.).
 
-A predefined DMS theme preset is applied (e.g., nord, catppuccin, gruvbox). The `Generic_Color` is set to `custom` and `Preset` names a DMS theme file.
+## DMS / dms
 
-## custom
+A predefined DMS theme preset is applied (e.g., `thinkpad`, `ROG`, `mac`). The `theme_preset_setting` names the preset directory under `~/.config/DankMaterialShell/themes/`.
 
-Hardware/vendor-branded presets applied (e.g., asusrog, razer, framework). Same mechanism as registry but themed to match specific hardware.
+Used by hardware-branded themes.
 
-## generic
+## directory
 
-Uses a fixed color name. No DMS preset is applied.
+A path to a DMS theme JSON file is used directly. The `theme_preset_setting` is an absolute path.
+
+## color
+
+A fixed Material You color name is used (e.g., `blue`, `green`, `red`). No DMS preset file is applied. The `theme_preset_setting` is the color name.
+
+Used by generic color themes.

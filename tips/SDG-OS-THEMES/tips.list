@@ -1,6 +1,10 @@
-[SDG-OS-THEMES]: SUPER+W — Open wallpaper group selector (FZF picker)
-[SDG-OS-THEMES]: ALT+W / ALT+SHIFT+W — Cycle wallpapers forward/backward in current group
-[SDG-OS-THEMES]: wallpaper-select <group-name> — Set a group directly without the picker
-[SDG-OS-THEMES]: Each group has a wallpaper.conf defining Matugen palette, mode, and DMS preset
-[SDG-OS-THEMES]: Dynamic groups auto-extract colors from the wallpaper via Matugen
-[SDG-OS-THEMES]: Custom groups apply hardware-branded DMS presets (ROG, Razer, Framework, etc.)
+[SDG-OS-THEMES]: SUPER+W — Open theme selector (FZF picker)
+[SDG-OS-THEMES]: ALT+W / ALT+SHIFT+W — Cycle wallpapers forward/backward in current theme
+[SDG-OS-THEMES]: sdgtheme <theme-name> — Switch to a theme directly without the picker
+[SDG-OS-THEMES]: Each theme has a theme.conf defining preset type, mode, font, bars, dock, frame, corner radius, and fastfetch logo
+[SDG-OS-THEMES]: Dynamic themes auto-extract colors from the wallpaper via Matugen
+[SDG-OS-THEMES]: Brand themes apply hardware DMS presets (ROG, Razer, ThinkPad, etc.)
+[SDG-OS-THEMES]: Font propagates to DMS, Ghostty, VSCode, Waybar, Monocle — disable with apply_font=false in sdg-themes.conf
+[SDG-OS-THEMES]: Corner radius applied to Waybar and Monocle via theme-overrides.css with --theme-radius variable
+[SDG-OS-THEMES]: Fastfetch logo and layout change per theme via sdgfetch — disable with apply_fastfetch=false
+[SDG-OS-THEMES]: Missing logos (aspirational) are documented in NEW-LOGOS.md with image descriptions for creation

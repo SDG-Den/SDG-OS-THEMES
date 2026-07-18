@@ -1,3 +1,9 @@
+#  sdg-themes update 0.5
+    
+## changelog 0.4 > 0.5
+
+updated themes to now also allow proper integration with fonts (ghostty, DMS, mangoWM, vscode, wayshell), also added sdgfetch integration and a config file
+
 #  sdg-themes update 0.4
     
 ## changelog 0.3.3 > 0.4

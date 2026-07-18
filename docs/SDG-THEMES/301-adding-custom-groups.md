@@ -1,69 +1,96 @@
-# Adding Custom Wallpaper Groups
+# Adding Custom Themes
 
-You can create your own wallpaper groups with custom images and theme settings.
+You can create your own themes by adding a directory under `~/.local/themes/<category>/`.
 
 ## Steps
 
-1. Create a new directory under `~/.config/SDG-THEMES/`
+1. Pick a category (e.g., `SDG-THEMES`, `SDG-THEMES-BRANDS`, `SDG-THEMES-FUN`, `SDG-THEMES-DESTINY`)
+
+2. Create the theme directory:
 
    ```sh
-   mkdir ~/.config/SDG-THEMES/my-group
+   mkdir -p ~/.local/themes/SDG-THEMES/my-theme
    ```
 
-2. Add wallpaper images (jpg/png)
+3. Add wallpaper images (jpg/png)
 
    ```sh
-   cp ~/wallpaper.jpg ~/.config/SDG-THEMES/my-group/
+   cp ~/wallpaper.jpg ~/.local/themes/SDG-THEMES/my-theme/
    ```
 
-3. Create a `wallpaper.conf` with the desired theme settings
+4. Create a `theme.conf`:
 
    ```sh
-   cat > ~/.config/SDG-THEMES/my-group/wallpaper.conf << EOF
-   Theme_Category:dynamic
-   Generic_Color:dynamic
-   Matugen:vibrant
-   Mode:dark
-   Preset:-
+   cat > ~/.local/themes/SDG-THEMES/my-theme/theme.conf << 'EOF'
+   theme_name=my-theme
+   theme_wallpaper=wallpaper.jpg
+   theme_preset_type=color
+   theme_preset_setting=blue
+   theme_mode=dark
+   theme_font="JetBrainsMono Nerd Font"
+   theme_border_thickness=2
+   theme_corner_radius=14
+   theme_bar1=false
+   theme_bar2=true
+   theme_bar3=false
+   theme_bar4=false
+   theme_dock=false
+   theme_frame=true
+   theme_animations=1
+   theme_fetch_conf=minimal.jsonc
    EOF
    ```
 
-4. The group will appear in the SUPER+W picker automatically — no registration needed.
+5. The theme will appear in the SUPER+W picker automatically.
 
-## Example Configurations
+## Example: Dynamic Theme (auto-color from wallpaper)
 
-**Dynamic (auto-color from wallpaper):**
 ```
-Theme_Category:dynamic
-Generic_Color:dynamic
-Matugen:vibrant
-Mode:dark
-Preset:-
-```
-
-**Registry (DMS preset):**
-```
-Theme_Category:registry
-Generic_Color:custom
-Matugen:vibrant
-Mode:dark
-Preset:nord
-```
-
-**Custom (hardware brand):**
-```
-Theme_Category:custom
-Generic_Color:custom
-Matugen:vibrant
-Mode:dark
-Preset:asusrog
+theme_name=my-dynamic
+theme_wallpaper=photo.jpg
+theme_preset_type=matugen
+theme_preset_setting=vibrant
+theme_mode=dark
+theme_font="JetBrainsMono Nerd Font"
+theme_border_thickness=2
+theme_corner_radius=14
+theme_bar1=false
+theme_bar2=false
+theme_bar3=true
+theme_bar4=false
+theme_dock=false
+theme_frame=false
+theme_animations=1
+theme_fetch_conf=simple.jsonc
 ```
 
-**Generic (fixed color):**
+## Example: Brand Theme (DMS preset)
+
 ```
-Theme_Category:generic
-Generic_Color:coral
-Matugen:vibrant
-Mode:light
-Preset:-
+theme_name=my-brand
+theme_wallpaper=brand-logo.png
+theme_preset_type=DMS
+theme_preset_setting=mybrand
+theme_mode=dark
+theme_font="JetBrainsMono Nerd Font"
+theme_border_thickness=1
+theme_corner_radius=4
+theme_bar1=true
+theme_bar2=false
+theme_bar3=false
+theme_bar4=false
+theme_dock=false
+theme_frame=false
+theme_animations=1
+theme_fetch_logo=mybrand
+theme_fetch_conf=screenfetch.jsonc
+```
+
+## Opt-Out Config
+
+To disable font propagation or fastfetch globally, create `~/.config/SDG-THEMES/sdg-themes.conf`:
+
+```sh
+apply_font=false
+apply_fastfetch=false
 ```
