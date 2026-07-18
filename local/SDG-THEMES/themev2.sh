@@ -76,6 +76,10 @@ echo "$SELECTED" > ~/.config/theme.state
 # fetch info from file
 source $WP_DIR/$SELECTED/theme.conf
 
+# handle font
+sdgfont $theme_font
+
+
 # handle preset type and setting
 echo "handling colors"
 sleep 1

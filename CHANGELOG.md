@@ -1,3 +1,16 @@
+#  sdg-themes update 0.5.2
+    
+## changelog 0.5.1 > 0.5.2
+
+added proper font support using sdgfont, also added sdgfont.
+
+usage:
+
+sdgfont <fontname>
+
+
+sets the font for mangoWM, DMS, ghostty and wayshell.
+
 #  sdg-themes update 0.5.1
     
 ## changelog 0.5 > 0.5.1
