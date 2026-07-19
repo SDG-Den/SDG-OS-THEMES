@@ -1,3 +1,10 @@
+#  sdg-themes update 0.5.3
+    
+## changelog 0.5.2 > 0.5.3
+
+
+updated all SDG-THEMES themes to use new setup with font/bar/anim/border configs. 
+
 #  sdg-themes update 0.5.2
     
 ## changelog 0.5.1 > 0.5.2
