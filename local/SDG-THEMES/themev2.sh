@@ -65,7 +65,6 @@ fi
 echo "user selected $SELECTED"
 echo "setting wallpaper"
 dms ipc call wallpaper set "$WP_DIR/$SELECTED/$(ls -1 "$WP_DIR/$SELECTED" | grep -v ".conf" | head -n 1)"
-sleep 0.2
 dms ipc call wallpaper next
 dms ipc call wallpaper prev
 sleep 0.01
@@ -80,7 +79,6 @@ source $WP_DIR/$SELECTED/theme.conf
 
 # handle preset type and setting
 echo "handling colors"
-sleep 1
 echo "preset type: $theme_preset_type"
 echo "preset setting: $theme_preset_setting"
 case $theme_preset_type in
@@ -125,7 +123,6 @@ dms ipc call settings set matugenScheme scheme-$Matugen
 dms ipc call settings set currentThemeName $ThemeName
 # browse > preset
 dms ipc call settings set customThemeFile "$Preset"
-sleep 0.2
 
 
 # handle font
@@ -137,7 +134,6 @@ fi
 # handle theme mode
 echo "handling theme mode"
 echo "mode is $theme_mode"
-sleep 0.2
 dms ipc call theme $theme_mode
 sleep 0.01
 
@@ -145,7 +141,6 @@ sleep 0.01
 echo "handling borders"
 echo "thickness: $theme_border_thickness"
 echo "radius: $theme_corner_radius"
-sleep 0.2
 
 echo "setting mango border size to $theme_border_thickness"
 dms ipc call settings set mangoLayoutBorderSize "$theme_border_thickness" # didnt apply
@@ -158,7 +153,6 @@ dms ipc call settings set mangoLayoutRadiusOverride "$theme_corner_radius" # did
 sleep 0.01
 # handle font
 echo "handling mango config"
-sleep 0.2
 MANGO_FONT_CONF="$HOME/.config/mango/theme-overrides.conf"
 mkdir -p "$(dirname "$MANGO_FONT_CONF")"
 cat > "$MANGO_FONT_CONF" <<- EOF
@@ -198,7 +192,6 @@ echo "bar 1: $theme_bar1"
 echo "bar 2: $theme_bar2"
 echo "bar 3: $theme_bar3"
 echo "bar 4: $theme_bar4"
-sleep 0.2
 if [ "$theme_bar1" == "true" ]; then
     dms ipc call bar reveal index 0
 
@@ -237,7 +230,6 @@ sleep 0.01
 # handle dock
 echo "handling dock"
 echo "dock mode: $theme_dock"
-sleep 0.2
 if [ "$theme_dock" == "true" ]; then
     dms ipc call settings set showDock true
     dms ipc call dock reveal
@@ -250,7 +242,6 @@ sleep 0.01
 # handle frame
 echo "handling frame"
 echo "frame mode: $theme_frame"
-sleep 0.2
 if [ "$theme_frame" == "true" ]; then
     dms ipc call settings set frameEnabled true
 else
@@ -260,7 +251,6 @@ sleep 0.01
 
 # handle fastfetch via sdgfetch
 echo "handling fastfetch"
-sleep 0.2
 if command -v sdgfetch >/dev/null 2>&1 && [ "$apply_fastfetch" != "false" ]; then
     [ -n "$theme_fetch_logo" ] && sdgfetch setlogo "$theme_fetch_logo"
     [ -n "$theme_fetch_conf" ] && sdgfetch setconf "$theme_fetch_conf"

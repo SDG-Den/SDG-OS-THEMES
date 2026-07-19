@@ -1,6 +1,7 @@
 #!/bin/bash
 
 unipkg install any fzf
+unipkg install any oldschool-pc-fonts
 
 WORKDIR="$HOME/.cache/SDG-PKG/sdg-themes"
 mkdir -p $HOME/.local/themes
