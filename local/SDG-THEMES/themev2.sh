@@ -273,5 +273,6 @@ sleep 1
 dms ipc call theme toggle
 sleep 1
 dms ipc call theme toggle
+sleep 1
 dms restart
 
