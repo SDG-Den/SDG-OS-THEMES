@@ -269,9 +269,9 @@ fi
 # -MARK: time save by eliminating restart or overlapping work during restart
 
 # -MARK: time save by reducing restart wait time
-
-sleep 1
 dms ipc call theme toggle
-sleep 1
+sleep 0.2
 dms ipc call theme toggle
+sleep 0.1
+dms restart
 
