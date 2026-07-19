@@ -237,10 +237,10 @@ echo "handled bar 4"
 echo "handling dock"
 echo "dock mode: $theme_dock"
 if [ "$theme_dock" == "true" ]; then
-    dms ipc call settings set showDock true &
+    dms ipc call settings set showDock true
     dms ipc call dock reveal
 else
-    dms ipc call settings set showDock false &
+    dms ipc call settings set showDock false
     dms ipc call dock hide 
 fi
 
@@ -249,9 +249,9 @@ fi
 echo "handling frame"
 echo "frame mode: $theme_frame"
 if [ "$theme_frame" == "true" ]; then
-    dms ipc call settings set frameEnabled true &
+    dms ipc call settings set frameEnabled true
 else
-    dms ipc call settings set frameEnabled false &
+    dms ipc call settings set frameEnabled false
 fi
 
 
@@ -270,6 +270,6 @@ fi
 
 # -MARK: time save by reducing restart wait time
 
-sleep 10
+sleep 1
 dms restart
 
