@@ -270,7 +270,4 @@ fi
 dms restart
 # -MARK: time save by reducing restart wait time
 sleep 5
-dms ipc call theme toggle
-# -MARK: time save by reducing or removing sleep
-sleep 0.2
-dms ipc call theme toggle 
+

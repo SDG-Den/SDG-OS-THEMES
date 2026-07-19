@@ -9,6 +9,8 @@ FULLFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f1 | head -n 1 | sed 's
 SHORTFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f2 | head -n 1| sed 's/^ //')
 STYLEFONT=$(echo "$FONTLIST" | grep -e "$FONT" | cut -d, -f3 | head -n 1| sed 's/^ //')
 
+
+
 echo " [sdgfont] applying following font:"
 echo "input: $FONT"
 echo ""
@@ -16,6 +18,13 @@ echo "detected fontname (full): $FULLFONT"
 echo "detected fontname (short): $SHORTFONT"
 echo "detected fontname (with styles): $STYLEFONT"
 echo ""
+
+echo "apply to DMS"
+# apply to DMS
+
+dms ipc call settings set fontFamily "$FULLFONT" &
+dms ipc call settings set monoFontFamily "$FULLFONT" &
+
 
 echo "apply to mango"
 # apply to mango
@@ -26,11 +35,7 @@ jump_label_decorate_font_desc= $FULLFONT 20
 
 EOF
 
-echo "apply to DMS"
-# apply to DMS
 
-dms ipc call settings set fontFamily "$FULLFONT"
-dms ipc call settings set monoFontFamily "$FULLFONT"
 
 # apply to wayshell
 echo "apply to wayshell"
