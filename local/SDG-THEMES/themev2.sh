@@ -237,10 +237,10 @@ echo "handled bar 4"
 echo "handling dock"
 echo "dock mode: $theme_dock"
 if [ "$theme_dock" == "true" ]; then
-    dms ipc call settings set showDock true
+    dms ipc call settings set showDock true &
     dms ipc call dock reveal
 else
-    dms ipc call settings set showDock false
+    dms ipc call settings set showDock false &
     dms ipc call dock hide 
 fi
 
@@ -267,12 +267,7 @@ fi
 
 
 # -MARK: time save by eliminating restart or overlapping work during restart
-
+wait
 # -MARK: time save by reducing restart wait time
-sleep 1
-dms ipc call theme toggle
-sleep 1
-dms ipc call theme toggle
-sleep 1
 dms restart
 
