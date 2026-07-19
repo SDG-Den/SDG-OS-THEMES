@@ -17,7 +17,7 @@ echo "detected fontname (short): $SHORTFONT"
 echo "detected fontname (with styles): $STYLEFONT"
 echo ""
 
-
+echo "apply to mango"
 # apply to mango
 cat > "$HOME/.config/mango/font-override.conf" <<- EOF
 
@@ -26,13 +26,14 @@ jump_label_decorate_font_desc= $FULLFONT 20
 
 EOF
 
-
+echo "apply to DMS"
 # apply to DMS
 
 dms ipc call settings set fontFamily "$FULLFONT"
 dms ipc call settings set monoFontFamily "$FULLFONT"
 
 # apply to wayshell
+echo "apply to wayshell"
 RADIUS_CSS_DIR="$HOME/.config/SDG-WAYSHELL-CONFIGS"
 mkdir -p "$RADIUS_CSS_DIR"
 cat > "$RADIUS_CSS_DIR/font-override.css" <<- EOF
@@ -40,6 +41,7 @@ cat > "$RADIUS_CSS_DIR/font-override.css" <<- EOF
 	    font-family: "$FULLFONT";
 	}
 	EOF
+echo "apply to monocle bar"
 MONOCLE_CSS_DIR="$HOME/.config/SDG-MONOCLE"
 if [ -d "$MONOCLE_CSS_DIR" ]; then
     cat > "$MONOCLE_CSS_DIR/font-override.css" <<- EOF
@@ -49,6 +51,7 @@ if [ -d "$MONOCLE_CSS_DIR" ]; then
 	EOF
 fi
 
+echo "apply to ghostty"
 # apply to ghostty
 GHOSTTY_CONF="$HOME/.config/ghostty/config.ghostty"
 if [ -f "$GHOSTTY_CONF" ]; then
@@ -58,7 +61,7 @@ if [ -f "$GHOSTTY_CONF" ]; then
         echo "font-family = $FULLFONT" >> "$GHOSTTY_CONF"
     fi
 fi
-
+echo "apply to vscode"
 # apply to vscode
 VSCODE_CONF="$HOME/.config/Code - OSS/User/settings.json"
 if [ -f "$VSCODE_CONF" ]; then
@@ -69,11 +72,12 @@ if [ -f "$VSCODE_CONF" ]; then
 fi
 
 # apply to gtk
+echo "apply to GTK"
 gsettings set org.gnome.desktop.interface font-name "$FULLFONT"
 
 
 
-
+echo "apply to vesktop"
 # apply to discord
 VESKTOP_CONF="$HOME/.config/vesktop/settings/quickCss.css"
 cat > "$VESKTOP_CONF" <<- EOF

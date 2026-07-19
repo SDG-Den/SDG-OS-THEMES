@@ -160,7 +160,7 @@ echo "setting mango corner radius to $theme_corner_radius"
 dms ipc call settings set mangoLayoutRadiusOverride "$theme_corner_radius" # didnt apply
 sleep 0.01
 # handle font
-echo "handling font"
+echo "handling mango config"
 sleep 0.2
 MANGO_FONT_CONF="$HOME/.config/mango/theme-overrides.conf"
 mkdir -p "$(dirname "$MANGO_FONT_CONF")"
@@ -178,7 +178,7 @@ cat "$MANGO_FONT_CONF"
 
 
 # generate corner radius CSS for Waybar
-echo "handling corner radius css"
+echo "handling wayshell corner radius css"
 RADIUS_CSS_DIR="$HOME/.config/SDG-WAYSHELL-CONFIGS"
 mkdir -p "$RADIUS_CSS_DIR"
 cat > "$RADIUS_CSS_DIR/theme-overrides.css" <<- EOF
@@ -186,6 +186,7 @@ cat > "$RADIUS_CSS_DIR/theme-overrides.css" <<- EOF
 	    border-radius: ${theme_corner_radius}px;
 	}
 	EOF
+echo "handling wayshell monocle bar radius css"
 MONOCLE_CSS_DIR="$HOME/.config/SDG-MONOCLE"
 if [ -d "$MONOCLE_CSS_DIR" ]; then
     cat > "$MONOCLE_CSS_DIR/theme-overrides.css" <<- EOF
