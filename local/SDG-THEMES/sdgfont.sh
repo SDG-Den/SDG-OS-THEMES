@@ -78,8 +78,7 @@ gsettings set org.gnome.desktop.interface font-name "$FULLFONT"
 VESKTOP_CONF="$HOME/.config/vesktop/settings/quickCss.css"
 cat > "$VESKTOP_CONF" <<- EOF
 * {
-	    font-family: "$FULLFONT";
-        font-size: 12px;
+	font-family: "$FULLFONT";
 }
 
 EOF
