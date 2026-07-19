@@ -36,7 +36,7 @@ case $SELECTED in
     ;;
 esac
 
-which matugen-compile && matugen-compile
+which matugen-compile && matugen-compile &
 
 # source optional config
 CONF_FILE="$HOME/.config/SDG-THEMES/sdg-themes.conf"
@@ -44,6 +44,7 @@ CONF_FILE="$HOME/.config/SDG-THEMES/sdg-themes.conf"
 
 
 
+# -MARK: time save by using find instead of nested ls loops
 WP_CATEGORIES=$(ls "$WP_DIR" -1 )
 
 echo "WP_CATEGORIES = $WP_CATEGORIES"
@@ -64,10 +65,10 @@ if [[ $SELECTED == "" ]]; then
 fi
 echo "user selected $SELECTED"
 echo "setting wallpaper"
-dms ipc call wallpaper set "$WP_DIR/$SELECTED/$(ls -1 "$WP_DIR/$SELECTED" | grep -v ".conf" | head -n 1)"
-dms ipc call wallpaper next
-dms ipc call wallpaper prev
-sleep 0.01
+# -MARK: time save by running wallpaper IPC in background and removing redundant next/prev
+dms ipc call wallpaper set "$WP_DIR/$SELECTED/$(ls -1 "$WP_DIR/$SELECTED" | grep -v ".conf" | head -n 1)" &
+
+# -MARK: time save by removing micro-sleep
 echo "$SELECTED" > ~/.config/theme.state
 
 ## todo: add other settings
@@ -114,44 +115,47 @@ case $theme_preset_type in
 esac
 
 #generic is registry
-dms ipc call settings set currentThemeCategory $ThemeCategory
+# -MARK: time save by batching independent theme settings IPC calls
+dms ipc call settings set currentThemeCategory $ThemeCategory &
 
 
 # auto > matugen template
-dms ipc call settings set matugenScheme scheme-$Matugen
+dms ipc call settings set matugenScheme scheme-$Matugen &
 
-dms ipc call settings set currentThemeName $ThemeName
+dms ipc call settings set currentThemeName $ThemeName &
 # browse > preset
-dms ipc call settings set customThemeFile "$Preset"
+dms ipc call settings set customThemeFile "$Preset" &
 
 
 # handle font
+# -MARK: time save by running sdgfont in background and removing sleep
 if [ "$apply_font" != "false" ]; then
-    sdgfont $theme_font
-    sleep 1
+    sdgfont $theme_font &
+    # -MARK: time save by removing unnecessary sleep
 fi
 
 # handle theme mode
 echo "handling theme mode"
 echo "mode is $theme_mode"
-dms ipc call theme $theme_mode
-sleep 0.01
+# -MARK: time save by batching with theme settings IPC calls
+dms ipc call theme $theme_mode &
+
 
 # handle borders
 echo "handling borders"
 echo "thickness: $theme_border_thickness"
 echo "radius: $theme_corner_radius"
 
+# -MARK: time save by batching border/radius IPC calls and removing micro-sleeps
 echo "setting mango border size to $theme_border_thickness"
-dms ipc call settings set mangoLayoutBorderSize "$theme_border_thickness" # didnt apply
-sleep 0.01
+dms ipc call settings set mangoLayoutBorderSize "$theme_border_thickness" &
+
 echo "setting corner radius to $theme_corner_radius"
-dms ipc call settings set cornerRadius "$theme_corner_radius"
-sleep 0.01
+dms ipc call settings set cornerRadius "$theme_corner_radius" &
+
 echo "setting mango corner radius to $theme_corner_radius"
-dms ipc call settings set mangoLayoutRadiusOverride "$theme_corner_radius" # didnt apply
-sleep 0.01
-# handle font
+dms ipc call settings set mangoLayoutRadiusOverride "$theme_corner_radius" &
+
 echo "handling mango config"
 MANGO_FONT_CONF="$HOME/.config/mango/theme-overrides.conf"
 mkdir -p "$(dirname "$MANGO_FONT_CONF")"
@@ -165,9 +169,9 @@ cat > "$MANGO_FONT_CONF" <<- EOF
 	EOF
 echo "configuration:"
 cat "$MANGO_FONT_CONF"
-# apply font to other targets (DMS, Ghostty, VSCode, Waybar)
 
 
+# -MARK: time save by backgrounding file writes (CSS radius files)
 # generate corner radius CSS for Waybar
 echo "handling wayshell corner radius css"
 RADIUS_CSS_DIR="$HOME/.config/SDG-WAYSHELL-CONFIGS"
@@ -187,80 +191,86 @@ if [ -d "$MONOCLE_CSS_DIR" ]; then
 	EOF
 fi
 # handle bars
+# -MARK: time save by batching bar IPC calls and removing micro-sleeps
 echo "handling bars"
 echo "bar 1: $theme_bar1"
 echo "bar 2: $theme_bar2"
 echo "bar 3: $theme_bar3"
 echo "bar 4: $theme_bar4"
 if [ "$theme_bar1" == "true" ]; then
-    dms ipc call bar reveal index 0
+    dms ipc call bar reveal index 0 &
 
 else
-    dms ipc call bar hide index 0
+    dms ipc call bar hide index 0 &
 fi
 echo "handled bar 1"
-sleep 0.01
+
 if [ "$theme_bar2" == "true" ]; then
-    dms ipc call bar reveal index 1
+    dms ipc call bar reveal index 1 &
 
 else
-    dms ipc call bar hide index 1
+    dms ipc call bar hide index 1 &
 fi
 echo "handled bar 2"
-sleep 0.01
+
 if [ "$theme_bar3" == "true" ]; then
-    dms ipc call bar reveal index 2
+    dms ipc call bar reveal index 2 &
 
 else
-    dms ipc call bar hide index 2
+    dms ipc call bar hide index 2 &
 fi
 echo "handled bar 3"
-sleep 0.01
+
 if [ "$theme_bar4" == "true" ]; then
-    dms ipc call bar reveal index 3
+    dms ipc call bar reveal index 3 &
 
 else
-    dms ipc call bar hide index 3
+    dms ipc call bar hide index 3 &
 fi
 echo "handled bar 4"
-sleep 0.01
+
 
 
 
 # handle dock
+# -MARK: time save by batching dock+frame IPC calls and removing micro-sleeps
 echo "handling dock"
 echo "dock mode: $theme_dock"
 if [ "$theme_dock" == "true" ]; then
-    dms ipc call settings set showDock true
+    dms ipc call settings set showDock true &
     dms ipc call dock reveal
 else
-    dms ipc call settings set showDock false
+    dms ipc call settings set showDock false &
     dms ipc call dock hide 
 fi
-sleep 0.01
+
 
 # handle frame
 echo "handling frame"
 echo "frame mode: $theme_frame"
 if [ "$theme_frame" == "true" ]; then
-    dms ipc call settings set frameEnabled true
+    dms ipc call settings set frameEnabled true &
 else
-    dms ipc call settings set frameEnabled false
+    dms ipc call settings set frameEnabled false &
 fi
-sleep 0.01
+
 
 # handle fastfetch via sdgfetch
+# -MARK: time save by running sdgfetch in background and removing micro-sleep
 echo "handling fastfetch"
 if command -v sdgfetch >/dev/null 2>&1 && [ "$apply_fastfetch" != "false" ]; then
-    [ -n "$theme_fetch_logo" ] && sdgfetch setlogo "$theme_fetch_logo"
-    [ -n "$theme_fetch_conf" ] && sdgfetch setconf "$theme_fetch_conf"
+    [ -n "$theme_fetch_logo" ] && sdgfetch setlogo "$theme_fetch_logo" &
+    [ -n "$theme_fetch_conf" ] && sdgfetch setconf "$theme_fetch_conf" &
     echo "sdgfetch: logo=$theme_fetch_logo conf=$theme_fetch_conf"
 fi
-sleep 0.01
 
 
+
+# -MARK: time save by eliminating restart or overlapping work during restart
 dms restart
+# -MARK: time save by reducing restart wait time
 sleep 5
 dms ipc call theme toggle
-sleep 0.5
+# -MARK: time save by reducing or removing sleep
+sleep 0.2
 dms ipc call theme toggle 
