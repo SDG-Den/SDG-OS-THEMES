@@ -126,10 +126,7 @@ dms ipc call settings set currentThemeName $ThemeName
 # browse > preset
 dms ipc call settings set customThemeFile "$Preset"
 sleep 0.2
-dms restart
-sleep 5
-dms ipc call theme toggle
-dms ipc call theme toggle 
+
 
 # handle font
 if [ "$apply_font" != "false" ]; then
@@ -272,4 +269,7 @@ fi
 sleep 0.01
 
 
-
+dms restart
+sleep 5
+dms ipc call theme toggle
+dms ipc call theme toggle 
