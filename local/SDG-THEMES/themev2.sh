@@ -259,8 +259,8 @@ fi
 # -MARK: time save by running sdgfetch in background and removing micro-sleep
 echo "handling fastfetch"
 if command -v sdgfetch >/dev/null 2>&1 && [ "$apply_fastfetch" != "false" ]; then
-    [ -n "$theme_fetch_logo" ] && sdgfetch setlogo "$theme_fetch_logo" &
-    [ -n "$theme_fetch_conf" ] && sdgfetch setconf "$theme_fetch_conf" &
+    [ -n "$theme_fetch_logo" ] && sdgfetch setlogo "$theme_fetch_logo"
+    [ -n "$theme_fetch_conf" ] && sdgfetch setconf "$theme_fetch_conf"
     echo "sdgfetch: logo=$theme_fetch_logo conf=$theme_fetch_conf"
 fi
 
