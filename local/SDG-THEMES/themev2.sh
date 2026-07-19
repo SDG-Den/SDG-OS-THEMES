@@ -130,7 +130,7 @@ dms ipc call settings set customThemeFile "$Preset" &
 # handle font
 # -MARK: time save by running sdgfont in background and removing sleep
 if [ "$apply_font" != "false" ]; then
-    sdgfont $theme_font &
+    sdgfont $theme_font && dms restart
     # -MARK: time save by removing unnecessary sleep
 fi
 
@@ -267,7 +267,7 @@ fi
 
 
 # -MARK: time save by eliminating restart or overlapping work during restart
-dms restart
+
 # -MARK: time save by reducing restart wait time
-sleep 5
+
 
